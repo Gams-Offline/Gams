@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Gams - Settings</title>
+<link type="image/x-icon" rel="icon" href="img/gams-g.png">
+<link rel="stylesheet" href="assets/new.min.css">
+<style>
+html, body {
+transition: .5s;
+}
+
+@font-face {
+  font-family: 'facon';
+  src: url('assets/facon.ttf') format('truetype');
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.title {
+font-size: 50pt;
+font-family: 'facon', sans-serif;
+letter-spacing: 3pt;
+}
+
+.facon {
+font-family: 'facon', sans-serif;
+}
+
+.tile {
+  color: var(--nc-tx-1);
+  height: auto;
+  width: auto;
+  border-radius: 10px;
+  border: 1px solid var(--nc-tx-1);
+  text-align: center;
+  position: relative;
+  float: left;
+  margin: 20px;
+}
+
+.tile img {
+  width: 200px;
+  height: 200px;
+  border-radius: 10px;
+}
+
+.tile:hover {
+  font-weight: bold;
+  cursor: pointer;
+  background: var(--nc-bg-3);
+}
+
+.shade {
+ opacity: 0.7;
+ background-color: var(--nc-bg-3);
+ position: fixed;
+ width: 100%;
+ height: 100vh;
+ top: 0px;
+ left: 0px;
+ z-index: 100;
+ display: block;
+}
+
+.cont {
+ opacity: 1;
+ color: var(--nc-tx-1);
+ background-color: var(--nc-bg-3);
+ z-index: 1000;
+ width: calc(100vw - 70px);
+ height: calc(100vh - 70px);
+ border-radius: 10px;
+ text-align: center;
+ position: fixed;
+ left: 50%;
+ top: 50%;
+ transform: translateX(-50%) translateY(-50%);
+}
+
+.loader{
+position: fixed;
+border:16px solid var(--nc-bg-3);
+border-radius:50%;
+border-top:16px solid var(--nc-lk-2);
+width:120px;
+height:120px;
+top: 0;
+right: 0;
+margin: 10px;
+animation:spin 2s linear infinite;
+transform: translateX(-50%) translateY(-50%);
+}
+
+@keyframes spin{
+0%{transform:rotate(0deg)}
+100%{transform:rotate(360deg)}
+}
+</style>
+<script src='i.js'></script>
+</head>
+<body onload="setSavedTheme()">
+<header>
+<h1 class="title">Gams - Settings</h1>
+</header>
+
+<label>Dark Mode:</label>
+<label class="switch">
+  <input id="darkModeInput" type="checkbox" checked oninput="changeTheme(this)">
+  <span class="slider round"></span>
+</label>
+
+<br><hr><br>
+
+<label>Open Gam Mode:</label>
+<select onchange='changeGamMode(this)' id='gamMode'>
+  <option value="embed">In this tab</option>
+  <option value="gam">In new tab</option>
+  <option value="blank">In an about:blank tab</option>
+  <option value="direct">Replace this tab</option>
+  <option value="raw">Raw link in new tab</option>
+</select>
+
+<br><hr><br>
+
+<h2>Disguise:</h2>
+<blockquote><i>This allows you to disguise this site as a different site.</i></blockquote>
+<label>Tab Name:</label>
+<input id="tabName" type="text" placeholder="Classes" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');"><button onclick="applyTitle()">Apply Title</button>
+<br>
+<label>Tab Icon:</label>
+<input id="tabIcon" accept="image/*" type="file"><button onclick="applyIcon()">Apply Icon</button>
+<h3>Presets:</h3>
+<blockquote><i>Click an image to apply that preset.</i></blockquote>
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABsklEQVQYV6WPMY9MYRSGnzO5K5mrsczINCujkBh3ihU1CX9BMSsKtqTQ6mzDr5BFQiLRSkRoFRu7icIQ3YoCESHL3DEbmfMqzjc3d1BxmvPlS97nPK9J4n8mm75Yvsz00zkzYTYPkwypAbJ4e2xkyBuw0LpvPzfaMpURrgMUAIhgBZGBGgGznIzpGMx4OW7xatLGbBYGJJTecoHHu2h+pZ/vgP8gQ4YQw3GbB1+OQgIgkS80kYvR7igBHLkzaImi+Q1kZKEJuJB71WDvnpy1M1dBsPb0BqNJiWpGqSWN6GRJ05ELubiwvEJ33xLdxSVWT5xHVRclw8ilCoY89STwt7fu0V08BMD687thKM1biKhgM3CtwmhScu3xdSRR7pZVuPInDicDknoA+p0eRecY/U4PgOGH12y83WT783aAHDSrIBlAquBcOXmJ00dOUZ+i02Nw/CwPh4+4+exWfMqQjExuYIDC4vdwfQ7v786FEWSoAYiiucPgwDuGb9bnQlVloCw/stJ+T5F/j4MyrHxyUKCw+NsIIK4pbbAAy8gkWwUu2uzSDKT6+jMIINkdU93xH+YXTrImgXmBBtYAAAAASUVORK5CYII=" onclick="presetDisguise(this, 'Classes')">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACt0lEQVQ4jY1TS2iUZxQ9997v/39nxsngpJqkOogPgkV84GMhtggS2k1BXSha6kIEC8WNFMEgmF+p6MKVIOLKjYr2AS2BFkoVuujGivhA0YVUQ8QuGsXRSf7H993rwlQFo/Qs7z2Hc87iAG+DprgBAGyKn5tCbP0nBj5uP+5s1aBODVRPLD+58M4Z2tK+/D43AoCV5zfOB+T62L9PakV7Ak81wua+xzg17/aY97q0+ikeTZINAPiVPH3pbgGHo1pcq9cqWZFpWfd5ufeD+1k83brZZIgAm+S+kcBAINiKc5vWcyy/w6sKE/090sZX0+/iUP8Il+qCONPgw9p4AH9ZCqYU+jrBqZURiI4SEwHQwIK5H1ZHvpn3zyMIq5kpRxSRylEzEIb+q5CCQbAVjdYOV4lWaxE8DBzF4FHqOtAYL44jEWaA/LgFV6X1xUXZQgSzFEwAsPi7zc1ppjdIuM988By72HJ/9cq2H1fZaUrKVnQtSqzf5+olZqe53hPV5fQZOgwASfCDrupmWxkCQM7MUFi5FyCjHcgilPtAIIDE5xqkTgs98x4A4CXnti1iwq4wEZTA4ESgeX72xhfDl5CmnKZgGrCf0fHDLjEiIkMGJcbu8Z/Qotbg959wqF00IwcD2Fneqi+5GaHpFQECIEfFFugtd+zel0sj7xMjhpF2UMvXEmBRz867v3FcXVfm7TCr0S2ze3tIoS9Tw8AwPCeHr68esQ0PzgRUmq6TF8M9f17ewACViPNBwzOqVIRmdtd8COOlllkR/EQZfFaGMivEZ/6Hj7b7sRl9DHruy0bYT4AJYNS50juaLNs5Y07v3DVdtS4BxcIuFpFYWGIhF0vMzGPVhhASWjP6y7fNS7cvGEBvbMFo3cFnnxPLLLAFU5AIgAAEKIjZAHXm/cM/hpq/TortXcv933gBpn4539/Ch68AAAAASUVORK5CYII=" onclick="presetDisguise(this, 'My Drive - Google Drive')">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACIklEQVQ4jYWSS0iUURTHf/fe8RvHooE2VlT2FNqUGWmNEYUR9lhEEVJhUIsoXOQuap1Rq6KHNQt3LaPAIOxhlNTChUwLMU3NR1CklUzg6xvPd1ro2KhTHjjcA/e8/uf/hzmmqsUiEheRLhHxp/2TiDxQ1aK5+ZmFeSJSrwuYiMRVNZKuMxnFz51zu9T3GX/6iPGmRqS/F5WAUMEawuUVRI5UYjwPEWl2zlUYY8YMgIjUW2vPBkPfSV6uYbKvJ+uW3rZSojfuABAEQdw5d96oajHQqr7P8IUqpL8X43lEjp3EK4mBtfgt75l4+4po7U3cytWZPbcyjUlTidv642ipDu7foX7bh2zgs92jDhHpUlWdbNmuEw15OvqweqE7ZjboCAEFADrSjs1LkRM7NAt3+bWRebfYudFx9XguwFqbwePs9z/mT/6NLdAHMBpex28W0/C1Y1Zy05VFM75nUwiAZVGT/v5sgdcA3UurOPUrxvXOFhJD7fOmdn4LeNc5NbpkfWimv5mWZ8KXFKdfXqInOYBnc6gsPEjZ8mKssbQOtvEkMczYl0oK8z3un4lgppbYkhZS3Fp7bnD0Jxeba+lODmTFviFcxq29NeRHDUEQ1DnnqtNSjohIo3Nutx+keNz9gmf9zfQkB0ChYMkK9q2KcaLwMJFQGFV9Y4w5YIwZzyBBI2lRLcD9PVXN/SdFqlokInUi0iEiE9P+UUTuqurmufl/AKTzsFGmvUNUAAAAAElFTkSuQmCC" onclick="presetDisguise(this, 'Google')">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB+0lEQVQ4jY2TvWsUQRjGf7M7u7PZS3J3XtKKRlQsgmBlZeAqU1kIgsFCTxE7QQgB/Q9ExD8gaCki2IhgrhCLCCJYWYmVmMuHwUiO7O3u7eyOxZ63m/OzeJnhnXme95n3mVecv9O52NNjD2PteWRAZiATIytFpIABZcWR7+y1xPzSTpiD/wAYjbTYKxlHsqj8a9XGhKYxnhHGgvUtSZoKMAVBHClP7pedg2cPa66eszgx4yOEwAC73YRnL2OevpCkmRiSyEJeXnXuZMLSlQquYxNGms5mzFRdUq+6tC44fFnr8uadKhMUb675KTcXPFzHZvV9wP1Hhm7XRlqa+TMR03WzD1xSkEufOwWT4y7fd/vcXYZeYEMGWguet53fNtUqyz92EIQQfPjYpxdYf3dj4IgsJ4QBAME/bDSFnVb54NNnMMYwe9yl4mX/8RcMFmmReP0W9oKEWtVl8TpM+ilkYAvD2WbC7VsaV2aUny2alwNTZm+eTli8UcGRNmGoWdvoM3VAUqs6GGO496BLe0XlBGakB2TwatVh51uPaws2R2c8jhwaw2DY/Brz+Emf9oo7BINANC/tV1Bu0nQjoT6REQSC9Y6D0YNvbsTgEkhlx1GslTckKHV4e8the6M8Hz8r52Cl4sjynbCl7CganbQiShNqhiajVBz5ftD6ATaARn+sBDd0AAAAAElFTkSuQmCC" onclick="presetDisguise(this, 'Clever | Portal')">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAdElEQVQ4jWN0bvse////nwkMDIwCDKSBB4yMzA2MTm1f7jP8Z1AgUTMMfGCiQDMDAwODAAsyb28VN1G6nNu+wtlMFNjOwMDAwIDiAmSTiQXUdcFoGOAPA1yuGxxh8IECBzxgYmBgKGRgZHhAut7/HxgYGBoB3s8g7yv6EgQAAAAASUVORK5CYII=" onclick="presetDisguise(this, 'Google Docs')">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACEUlEQVQ4jcWSP0jUYRjHP8/7/t7z/JelHAhJEN2QUmKFp1DkkIVubVK0NCSI0ODWdksNQRQJQhq0NQQ1ZYM5aIiY1iZEdIKQQ/BT01S8636/92nIjgyusb7Ld/n+4fnywP+GAMw2NdW7hO3cNW7hfC4X/s2gr0jFB2z7znY8V9fDusmC0YQddcaMO1+c+nDqeFc589adxq6oIpiyVsargmBUsxiTSaediQsn86pYkZbqZMX42sXMkGYxpdYsJjzXOaTLdeOBo4U8BBq3ksEFd699kitvbsRtyxNE6sFItRO5tzrTnvlyyd0EWJ0pPnQJ+rw3+MhjRJj43hS9XLpMAPD0wjBLuRf0zN7G+oiCT1Ahpi8ffW8FqLC2Oe89VXi21DG808rzrSNsp3OYynrUasxcy1Ue9z7RsOZwmMST957AmObAmOa89ySN8FmT4eDGWX22e4xg78A9UlxUYKXxNPczDwYo5kecCAoo4ESQOBq51XZ0YDFqIClxadjSUABOI/lYk16rnV4cjNB+gU2BzQjtr51+P5hrDNYSovK7Z18AQKUvWIDU5MJYLHTHQndqcmEMoDLC/qkPfrGIART1cakh9Xr+3T6194KzIILGP72mY52iIvMeH3r1obW2UO6RxJgCsQ9RH+J1PtfbUQyyWfFnHun1hm8cAljZYaNcwLaVtweD+ARAYSv1Fcn6ctp/hx+qpdgPE5JfygAAAABJRU5ErkJggg==" onclick="presetDisguise(this, 'Drafts (24) -  G-Mail')">
+
+<br>
+<button onclick="removeDisguise()">Don't Disguise Anymore</button>
+
+<br><hr><br>
+
+<a href="Gams.html"><small class="facon">Gams</small></a>
+
+<script>
+const BroadcastDisguise = new BroadcastChannel('BroadcastDisguise');
+
+function l(e) {
+  return document.getElementById(e);
+}
+
+function setLight() {
+document.documentElement.style.setProperty('--nc-tx-1', "#000000");
+document.documentElement.style.setProperty('--nc-tx-2', "#1A1A1A");
+document.documentElement.style.setProperty('--nc-bg-1', "#FFFFFF");
+document.documentElement.style.setProperty('--nc-bg-2', "#F6F8FA");
+document.documentElement.style.setProperty('--nc-bg-3', "#E5E7EB");
+document.documentElement.style.setProperty('--nc-lk-1', "#0070F3");
+document.documentElement.style.setProperty('--nc-lk-2', "#0366D6");
+document.documentElement.style.setProperty('--nc-lk-tx', "#FFFFFF");
+document.documentElement.style.setProperty('--nc-ac-1', "#79FFE1");
+document.documentElement.style.setProperty('--nc-ac-tx', "#0C4047");
+}
+
+function setDark() {
+document.documentElement.style.setProperty('--nc-tx-1', "#ffffff");
+document.documentElement.style.setProperty('--nc-tx-2', "#eeeeee");
+document.documentElement.style.setProperty('--nc-bg-1', "#000000");
+document.documentElement.style.setProperty('--nc-bg-2', "#111111");
+document.documentElement.style.setProperty('--nc-bg-3', "#222222");
+document.documentElement.style.setProperty('--nc-lk-1', "#3291FF");
+document.documentElement.style.setProperty('--nc-lk-2', "#0070F3");
+document.documentElement.style.setProperty('--nc-lk-tx', "#FFFFFF");
+document.documentElement.style.setProperty('--nc-ac-1', "#7928CA");
+document.documentElement.style.setProperty('--nc-ac-tx', "#FFFFFF");
+}
+
+function getStoredJSON(key, data) {
+ if (data && data.key && (localStorage[key] != 'null')) {
+  var inStore = JSON.parse(localStorage[key]);
+  if ((typeof inStore == 'object') && inStore.hasOwnProperty(data.key)) {
+   return inStore[data.key];
+  }
+ }
+ if (localStorage[key] && !data) {
+  return JSON.parse(localStorage[key]);
+ }
+ return null;
+}
+
+function storeJSON(key, data) {
+ if (localStorage[key]) {
+  var inStore = JSON.parse(localStorage[key]) || {};
+  inStore[data.key] = data.value;
+  localStorage[key] = JSON.stringify(inStore);
+ }else{
+  var inStore = {};
+  inStore[data.key] = data.value;
+  localStorage[key] = JSON.stringify(inStore);
+ }
+ 
+ return localStorage[key];
+}
+
+function removeJSON(key, data) {
+ if (localStorage[key]) {
+  var inStore = JSON.parse(localStorage[key]) || {};
+   if (inStore.hasOwnProperty(data.key)) {
+    delete inStore[data.key];
+   }
+  localStorage[key] = JSON.stringify(inStore);
+ }
+ return localStorage[key];
+}
+
+function changeTheme(input) {
+    var wantsDarkMode = (input.checked);
+    if (wantsDarkMode) {
+        setDark();
+        storeJSON('gams', {
+         key: 'theme',
+         value: 'dark'
+        })
+    } else {
+        setLight();
+        storeJSON('gams', {
+         key: 'theme',
+         value: 'light'
+        })
+    }
+}
+
+function changeGamMode(input) {
+ storeJSON('gams', {
+  key: 'gamMode',
+  value: input.value
+ });
+}
+
+function setSavedTheme() {
+//Set Gam Mode
+if (getStoredJSON('gams', {key: 'gamMode'})) {document.getElementById('gamMode').value = getStoredJSON('gams', {key: 'gamMode'})}
+//Set gam Mode
+
+    if (getStoredJSON('gams') && getStoredJSON('gams', {key: 'theme'})) {
+        var theme = getStoredJSON('gams', {key: 'theme'});
+        if (theme == 'light') {
+            //eww you monster
+            setLight();
+            l('darkModeInput').checked = false;
+        } else if (theme == 'dark') {
+            setDark();
+            l('darkModeInput').checked = true;
+        }
+    } else {
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            var newColorScheme = event.matches ? "dark" : "light";
+            if (newColorScheme == 'dark') {
+                l('darkModeInput').checked = true
+            }
+            if (newColorScheme == 'light') {
+                l('darkModeInput').checked = false
+            }
+        });
+
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            l('darkModeInput').checked = true;
+        } else {
+            l('darkModeInput').checked = false;
+        }
+    }
+}
+
+function fileToData(file, callback) {
+ var reader = new FileReader();
+ reader.onload = function(e){
+  callback(e.target.result);
+ };
+ reader.readAsDataURL(file);
+}
+
+function diment(e,t,n) {
+var o = e.width;
+var c = e.height;
+
+o>c?o>t&&(c=Math.round(c*t/o),o=t):c>n&&(o=Math.round(o*n/c),c=n);
+
+return[o,c]
+}
+  
+ function handleFileSelect(file){
+    var blob = URL.createObjectURL(file);
+    
+    var img = new Image;
+    img.src = blob;
+    
+    img.onload = function(){
+     var dimentions = (diment(img, 30, 30));
+     var canvas = document.createElement("canvas");
+     var wdth = dimentions[0];
+     var heit = dimentions[1];
+     
+     canvas.width = wdth;
+     canvas.height = heit;
+     var ctx = canvas.getContext("2d");
+     ctx.drawImage(img, 0, 0, wdth, heit);
+     canvas.toBlob(function(e) {
+      fileToData(e, function(data){
+       storeJSON('gams', {
+         key: 'icon',
+         value: data
+        });
+        applyDisguise();
+        BroadcastDisguise.postMessage('update');
+      });
+     }, "image/png", 0);
+  }
+ }
+ 
+function applyTitle() {
+ var input = l('tabName');
+ if (input.value) {
+  storeJSON('gams', {
+   key: 'title',
+   value: input.value
+  });
+  BroadcastDisguise.postMessage('update');
+  applyDisguise();
+ }else{
+  alert("Choose a title.")
+ }
+}
+ 
+function applyIcon() {
+ var input = l('tabIcon');
+ if (input.files && input.files.length >= 1) {
+  handleFileSelect(input.files[0])
+ }else{
+  alert("Upload a file.");
+ }
+}
+
+function removeDisguise() {
+ removeJSON('gams', {key: 'icon'});
+ removeJSON('gams', {key: 'title'});
+ BroadcastDisguise.postMessage('update');
+ applyDisguise();
+}
+
+function setFavicon(href) {
+  var existFav = document.querySelectorAll('link[rel*="icon"]');
+  existFav.forEach(function(favicon) {
+    favicon.parentNode.removeChild(favicon);
+  });
+
+  var link = document.createElement('link');
+  link.type = 'image/x-icon';
+  link.rel = 'icon';
+  link.href = href;
+  document.getElementsByTagName('head')[0].appendChild(link);
+}
+
+const ogTitle = document.title;
+const ogIcon = document.querySelectorAll('link[rel*="icon"]')[0].href;
+
+function applyDisguise() {
+ var icon = getStoredJSON('gams', {key: 'icon'});
+ var title = getStoredJSON('gams', {key: 'title'});
+ if (title) {
+  document.title = (title);
+ }else{
+  document.title = (ogTitle);
+ }
+
+ if (icon) {
+  setFavicon(icon)
+ }else{
+  setFavicon(ogIcon)
+ }
+}
+
+applyDisguise();
+
+function presetDisguise(img, title) {
+storeJSON('gams', {key: 'icon', value: img.src});
+storeJSON('gams', {key: 'title', value: title});
+
+BroadcastDisguise.postMessage('update');
+
+applyDisguise();
+}
+
+BroadcastDisguise.onmessage = () => {
+applyDisguise();
+};
+</script>
+</body>
+</html>

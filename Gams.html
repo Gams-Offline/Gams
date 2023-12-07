@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Gams</title>
+<link type="image/x-icon" rel="icon" href="img/gams-g.png">
+<link rel="stylesheet" href="assets/new.min.css">
+<style>
+html, body {
+transition: .5s;
+}
+
+@font-face {
+font-family: 'facon';
+src: url('assets/facon.ttf') format('truetype');
+}
+
+.switch {
+position: relative;
+display: inline-block;
+width: 60px;
+height: 34px;
+}
+
+.switch input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+
+.slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #ccc;
+-webkit-transition: .4s;
+transition: .4s;
+}
+
+.slider:before {
+position: absolute;
+content: "";
+height: 26px;
+width: 26px;
+left: 4px;
+bottom: 4px;
+background-color: white;
+-webkit-transition: .4s;
+transition: .4s;
+}
+
+input:checked + .slider {
+background-color: #2196F3;
+}
+
+input:focus + .slider {
+box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+-webkit-transform: translateX(26px);
+-ms-transform: translateX(26px);
+transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+border-radius: 34px;
+}
+
+.slider.round:before {
+border-radius: 50%;
+}
+
+.title {
+font-size: 50pt;
+font-family: 'facon', sans-serif;
+letter-spacing: 3pt;
+}
+
+.tile {
+color: var(--nc-tx-1);
+height: auto;
+width: auto;
+border-radius: 10px;
+border: 1px solid var(--nc-tx-1);
+text-align: center;
+position: relative;
+float: left;
+margin: 20px;
+}
+
+.tile img {
+width: 200px;
+height: 200px;
+border-radius: 10px;
+}
+
+.tile:hover {
+font-weight: bold;
+cursor: pointer;
+background: var(--nc-bg-3);
+}
+
+.shade {
+opacity: 0.7;
+background-color: var(--nc-bg-3);
+position: fixed;
+width: 100%;
+height: 100vh;
+top: 0px;
+left: 0px;
+z-index: 100;
+display: block;
+}
+
+.cont {
+opacity: 1;
+color: var(--nc-tx-1);
+background-color: var(--nc-bg-3);
+z-index: 1000;
+width: calc(100vw - 70px);
+height: calc(100vh - 70px);
+border-radius: 10px;
+text-align: center;
+position: fixed;
+left: 50%;
+top: 50%;
+transform: translateX(-50%) translateY(-50%);
+}
+
+.loader{
+position: fixed;
+border:16px solid var(--nc-bg-3);
+border-radius:50%;
+border-top:16px solid var(--nc-lk-2);
+width:120px;
+height:120px;
+top: 0;
+right: 0;
+margin: 10px;
+animation:spin 2s linear infinite;
+transform: translateX(-50%) translateY(-50%);
+}
+
+@keyframes spin{
+0%{transform:rotate(0deg)}
+100%{transform:rotate(360deg)}
+}
+</style>
+<script src='i.js'></script>
+</head>
+<body onload="setSavedTheme()">
+<header>
+<h1 class="title">Gams</h1>
+</header>
+
+<label>Search:</label>
+<input id="searchQuery" type="search" onload="startSearch()" onkeyup="startSearch()" autocomplete="off">
+
+<br>
+
+<label>Dark Mode:</label>
+<label class="switch">
+<input id="darkModeInput" type="checkbox" checked oninput="changeTheme(this)">
+<span class="slider round"></span>
+</label>
+
+<br>
+<label>Open Gam Mode:</label>
+<select onchange='changeGamMode(this)' id='gamMode'>
+<option value="embed">On this tab</option>
+<option value="gam">In new tab</option>
+<option value="blank">In an about:blank tab</option>
+<option value="direct">Replace this tab</option>
+<option value="raw">Raw link in new tab</option>
+</select>
+
+<div class="overlay" id="overlay" style="display:none">
+<div class="shade" id="shade"></div>
+<div class="cont" id="cont">
+<a style="position:fixed;top:-35px;left:-35px;" id="newWin" title="Open in new window" target="_blank">
+<button>🡽</button>
+</a>
+<iframe style="width:100%;height:100%;border-radius:10px" frameborder=0 id="mainGam"></iframe>
+
+<div class='loader' id='loader'></div>
+</div>
+</div>
+
+
+<div id="contain">
+
+<a href="Settings.html" class="tile"><img class="img" src="img/gams-g.png"><p class="name">Settings</p></a>
+<a href="g/about.html" class="tile"><img class="img" src="img/gams-g.png"><p class="name">About</p></a>
+
+</div>
+
+<script>
+const BroadcastDisguise = new BroadcastChannel('BroadcastDisguise');
+
+function l(e) {
+return document.getElementById(e);
+}
+
+function setLight() {
+document.documentElement.style.setProperty('--nc-tx-1', "#000000");
+document.documentElement.style.setProperty('--nc-tx-2', "#1A1A1A");
+document.documentElement.style.setProperty('--nc-bg-1', "#FFFFFF");
+document.documentElement.style.setProperty('--nc-bg-2', "#F6F8FA");
+document.documentElement.style.setProperty('--nc-bg-3', "#E5E7EB");
+document.documentElement.style.setProperty('--nc-lk-1', "#0070F3");
+document.documentElement.style.setProperty('--nc-lk-2', "#0366D6");
+document.documentElement.style.setProperty('--nc-lk-tx', "#FFFFFF");
+document.documentElement.style.setProperty('--nc-ac-1', "#79FFE1");
+document.documentElement.style.setProperty('--nc-ac-tx', "#0C4047");
+}
+
+function setDark() {
+document.documentElement.style.setProperty('--nc-tx-1', "#ffffff");
+document.documentElement.style.setProperty('--nc-tx-2', "#eeeeee");
+document.documentElement.style.setProperty('--nc-bg-1', "#000000");
+document.documentElement.style.setProperty('--nc-bg-2', "#111111");
+document.documentElement.style.setProperty('--nc-bg-3', "#222222");
+document.documentElement.style.setProperty('--nc-lk-1', "#3291FF");
+document.documentElement.style.setProperty('--nc-lk-2', "#0070F3");
+document.documentElement.style.setProperty('--nc-lk-tx', "#FFFFFF");
+document.documentElement.style.setProperty('--nc-ac-1', "#7928CA");
+document.documentElement.style.setProperty('--nc-ac-tx', "#FFFFFF");
+}
+
+function getStoredJSON(key, data) {
+if (data && data.key && (localStorage[key] != 'null')) {
+var inStore = JSON.parse(localStorage[key]);
+if ((typeof inStore == 'object') && inStore.hasOwnProperty(data.key)) {
+return inStore[data.key];
+}
+}
+if (localStorage[key] && !data) {
+return JSON.parse(localStorage[key]);
+}
+return null;
+}
+
+function storeJSON(key, data) {
+if (localStorage[key]) {
+var inStore = JSON.parse(localStorage[key]) || {};
+inStore[data.key] = data.value;
+localStorage[key] = JSON.stringify(inStore);
+}else{
+var inStore = {};
+inStore[data.key] = data.value;
+localStorage[key] = JSON.stringify(inStore);
+}
+
+return localStorage[key];
+}
+
+function changeTheme(input) {
+var wantsDarkMode = (input.checked);
+if (wantsDarkMode) {
+setDark();
+storeJSON('gams', {
+key: 'theme',
+value: 'dark'
+})
+} else {
+setLight();
+storeJSON('gams', {
+key: 'theme',
+value: 'light'
+})
+}
+}
+
+function changeGamMode(input) {
+storeJSON('gams', {
+key: 'gamMode',
+value: input.value
+});
+}
+
+function setSavedTheme() {
+//Set Gam Mode
+if (getStoredJSON('gams', {key: 'gamMode'})) {document.getElementById('gamMode').value = getStoredJSON('gams', {key: 'gamMode'})}
+//Set gam Mode
+
+if (getStoredJSON('gams') && getStoredJSON('gams', {key: 'theme'})) {
+var theme = getStoredJSON('gams', {key: 'theme'});
+if (theme == 'light') {
+//eww you monster
+setLight();
+l('darkModeInput').checked = false;
+} else if (theme == 'dark') {
+setDark();
+l('darkModeInput').checked = true;
+}
+} else {
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+var newColorScheme = event.matches ? "dark" : "light";
+if (newColorScheme == 'dark') {
+l('darkModeInput').checked = true
+}
+if (newColorScheme == 'light') {
+l('darkModeInput').checked = false
+}
+});
+
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+l('darkModeInput').checked = true;
+} else {
+l('darkModeInput').checked = false;
+}
+}
+}
+
+l('shade').onclick = function() {
+l('overlay').style.display='none';
+l("mainGam").src = '';
+l("newWin").href = '';
+}
+
+function startSearch() {
+var input, filter, ul, li, a, i;
+input = l("searchQuery");
+filter = input.value.toUpperCase();
+ul = document.body;
+li = ul.getElementsByClassName("tile");
+for (i = 0; i < li.length; i++) {
+if (li[i].textContent.toUpperCase().indexOf(filter) > -1) {
+li[i].style.display = "";
+} else {
+li[i].style.display = "none";
+}
+}
+}
+
+function createElement(tag, prps) {
+var elm = document.createElement(tag);
+if (prps) {
+var props = Object.getOwnPropertyNames(prps);
+for (i=0;i<props.length;i++) {
+elm.setAttribute(props[i], prps[props[i]]);
+}
+}
+
+return elm;
+}
+
+var gamsList = [
+{title: "Basic", type: "section"},
+{name: "Stickman Hook"},
+{name: "Drive Mad", href: "g/g/drivemad/drivemad.html"},
+{name: "2048"},
+{name: "Cookie Clicker", href: "g/g/cookie/index.html"},
+{name: "Cube Field", href: "g/g/cubefield/index.html"},
+{name: "Spacebar Clicker"},
+{name: "Offline Paradise"},
+{name: "Sand Game"},
+{name: "Agario Lite"},
+{name: "Evil Glitch"},
+{name: "Its Raining Boxes"},
+{name: "T Rex"},
+{name: "Stack"},
+{name: "Rolling Forests"},
+{name: "Radius Raid"},
+{name: "Mountain Maze"},
+{name: "Fluid Simulator"},
+{name: "Edge Not Found"},
+{name: "Ninja vs EVILCORP"},
+{name: "Geometry Dash"},
+
+{title: "Unity", type: "section"},
+{name: "Slope"},
+{name: "Burrito Bison", href: "g/g/burritobison/burritobison.html"},
+{name: "Tube Jumpers"},
+{name: "Hole IO"},
+{name: "Madalin Stunt Cars", href: "g/g/madalinstuntcars/madalinstuntcars.html"},
+{name: "Glass City", href: "g/g/glasscity/glasscity.html"},
+
+{title: "Retrogaming", type: "section"},
+{name: "Super Mario 64"},
+{name: "Celeste"},
+{name: "Just One Boss"},
+
+{title: "Henry Stickmin Flash", type: "section"},
+{name: "Breaking The Bank"},
+{name: "Escaping The Prison"},
+{name: "Stealing The Diamond"},
+{name: "Infiltrating The Airship"},
+{name: "Fleeing The Complex"},
+
+{title: "Flash", type: "section"},
+{name: "Bloxorz"},
+{name: "Tetris"},
+{name: "Flood Runner 4"},
+{name: "Raft Wars"},
+{name: "Raft Wars 2"},
+{name: "Worlds Hardest Game"},
+{name: "The Impossible Quiz"},
+{name: "Learn To Fly Idle"},
+{name: "Learn To Fly 1"},
+{name: "Learn To Fly 2"},
+{name: "Learn To Fly 3"},
+{name: "Bloons Tower Defense 1"},
+{name: "Bloons Tower Defense 2"},
+{name: "Bloons Tower Defense 5"},
+
+{title: "Tools", type: "section"},
+{name: "Ruffle Flash Player", href: "g/g/Ruffle/Ruffle.html"},
+];
+
+var container = createElement('div', {
+id: 'container'
+})
+
+var currentSection = undefined;
+for (j = 0; j < gamsList.length; j++){
+
+if (gamsList[j].title) {currentSection = gamsList[j].title}
+
+if(gamsList[j].name){
+var tile = createElement('div', {
+class : 'tile'
+});
+var imgName = (gamsList[j].name).toLowerCase().replace(/\s/g, '');
+var imgSrc = (gamsList[j].img) || 'img/' + imgName + '.png';
+var img = createElement('img', {
+class : 'img',
+src : imgSrc
+});
+tile.appendChild(img);
+
+var p = createElement('p', {
+class : 'name'
+});
+p.innerHTML = gamsList[j].name;
+tile.appendChild(p);
+
+if (currentSection) {
+var section = createElement('span', {
+style: "display:none"
+});
+section.innerHTML = currentSection;
+tile.appendChild(section);
+}
+
+var aName = (gamsList[j].name).toLowerCase().replace(/\s/g, '');
+var aHref = (gamsList[j].href) || 'g/' + imgName + '.html';
+var a = createElement('a', {
+class : 'href',
+href : aHref
+});
+tile.appendChild(a);
+container.appendChild(tile);
+}else if (gamsList[j].title){
+var title = createElement('h2', {
+style: "float:left;width:100%"
+});
+container.appendChild(createElement('br'));
+title.innerHTML = gamsList[j].title;
+container.appendChild(title);
+container.appendChild(createElement('br'));
+}
+}
+l('contain').appendChild(container);
+
+
+var mode = 'embed'; //embed, gam, blank, direct
+//Init
+var gams = document.getElementsByClassName("tile");
+for (i = 0; i < gams.length; i++){
+gams[i].onclick = function(e){
+var href = (this.getElementsByClassName("href")[0].href);
+var name = (this.getElementsByClassName("name")[0].innerText);
+var pic = (this.getElementsByClassName("img")[0].src);
+
+mode = getStoredJSON('gams', {key: 'gamMode'}) || 'embed';
+
+if (mode == 'raw') {
+window.open(href);
+}
+
+if (mode == 'direct') {
+window.location = `g/g/Gam.html?icon=${pic}&name=${name}&src=${href}`;
+}
+
+if (mode == 'blank') {
+var w = window.open();
+var doc = w.document;
+
+var body = doc.body;
+body.style = "margin:0";
+var iframe = w.document.createElement('iframe');
+iframe.style = "width:100vw;height:100vh";
+iframe.setAttribute('frameborder', 0);
+iframe.src = `g/g/Gam.html?icon=${pic}&name=${name}&src=${href}`;
+body.appendChild(iframe);
+
+var script = w.document.createElement('script');
+script.innerHTML = `const BroadcastDisguise = new BroadcastChannel('BroadcastDisguise');
+
+function setFavicon(href) {
+var existFav = document.querySelectorAll('link[rel*="icon"]');
+existFav.forEach(function(favicon) {
+favicon.parentNode.removeChild(favicon);
+});
+
+var link = document.createElement('link');
+link.type = 'image/x-icon';
+link.rel = 'icon';
+link.href = href;
+document.getElementsByTagName('head')[0].appendChild(link);
+}
+
+function getStoredJSON(key, data) {
+if (data && data.key && (localStorage[key] != 'null')) {
+var inStore = JSON.parse(localStorage[key]);
+if ((typeof inStore == 'object') && inStore.hasOwnProperty(data.key)) {
+return inStore[data.key];
+}
+}
+if (localStorage[key] && !data) {
+return JSON.parse(localStorage[key]);
+}
+return null;
+}
+
+function applyDisguise() {
+var icon = getStoredJSON('gams', {key: 'icon'});
+var title = getStoredJSON('gams', {key: 'title'});
+if (title) {
+document.title = (title);
+}else{
+document.title = 'about:blank';
+}
+
+if (icon) {
+setFavicon(icon)
+}else{
+setFavicon('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABRklEQVR42mKgOqjq75ds7510YNL0uV9nAGqniqwKYiCIHIIjcAK22BGQLRdgBWvc3fnWk/FJhrkPO1xPgGvqPfLfJMHhT1yqurvS48bPaJhjD2efgidnVwa2yv59xecvEvi0UWCXq9t0ItfP2MMZ7nwIpkA8F1n8uLxZHM6yrBH7FIl2gFXDHYsErkn2hyKLHtcKrFntk58uVQJ+kSdQnmjhID4cwLLa8+K0BXsfNWCqBOsFdo2Yldv43DBrkxd30cjnNyYBhK0SQGkI9pG4Mu40D5b374DRCAyhHqXVfTmOwivivMkJxBz5wnHCtBfGgNFC+ChWKWRf3hsQIlyEoIv4IYEo5wkgtBLRekY9DE4Uin4Keae6hydGnljPmE8kRcCine6827AMsJ1IuW9ibnlQpXLBCR/WC875m2BP+VSu3c/0m+8V08OBngc0pxcAAAAASUVORK5CYII=')
+}
+}
+
+applyDisguise();
+
+BroadcastDisguise.onmessage = () => {
+applyDisguise();
+};
+`;
+doc.head.appendChild(script);
+}
+
+if (mode == 'gam') {
+window.open(`g/g/Gam.html?icon=${pic}&name=${name}&src=${href}`);
+}
+
+if (mode == 'embed') {
+l('overlay').style.display = 'block';
+l("mainGam").src = href;
+l("newWin").href = href;
+l("mainGam").focus();
+l("loader").style.display = 'block';
+l("mainGam").onload = function(){
+l("mainGam").focus();
+setTimeout(function(){
+l("loader").style.display = 'none';
+l("mainGam").focus();
+}, 100);
+}
+}
+
+}
+}
+//Init
+
+function setFavicon(href) {
+var existFav = document.querySelectorAll('link[rel*="icon"]');
+existFav.forEach(function(favicon) {
+favicon.parentNode.removeChild(favicon);
+});
+
+var link = document.createElement('link');
+link.type = 'image/x-icon';
+link.rel = 'icon';
+link.href = href;
+document.getElementsByTagName('head')[0].appendChild(link);
+}
+
+const ogTitle = document.title;
+const ogIcon = document.querySelectorAll('link[rel*="icon"]')[0].href;
+
+function applyDisguise() {
+var icon = getStoredJSON('gams', {key: 'icon'});
+var title = getStoredJSON('gams', {key: 'title'});
+if (title) {
+document.title = (title);
+}else{
+document.title = (ogTitle);
+}
+
+if (icon) {
+setFavicon(icon)
+}else{
+setFavicon(ogIcon)
+}
+}
+
+applyDisguise();
+
+BroadcastDisguise.onmessage = () => {
+applyDisguise();
+};
+</script>
+</body>
+</html>
