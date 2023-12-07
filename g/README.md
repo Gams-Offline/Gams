@@ -1,0 +1,1 @@
+Main game storage
