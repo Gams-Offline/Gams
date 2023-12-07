@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<body style="width:100vw;height:100vh;margin:0;padding:0;overflow:hidden">
+<script>
+var gamPath = "g/Ruffle/swfs/bloxorz.js";
+function loadScripts(scripts, callback){
+  var loadedCount = 0;
+  function scriptLoaded(){
+    loadedCount++ ;
+    if(loadedCount === scripts.length){
+      callback(null);
+    }
+  }
+  scripts.forEach(function (script){
+    var scriptTag = document.createElement('script');
+    scriptTag.src = script;
+    scriptTag.onload = scriptLoaded;
+    scriptTag.onerror = function() {
+      callback(new Error('Failed to load script: ' + script));
+    };
+    document.head.appendChild(scriptTag);
+  });
+}
+
+function dataURLtoBlobURL(dataURL){
+  try {
+    var byteString = atob(dataURL.split(',')[1]);
+    var mime = dataURL.split(',')[0].split(':')[0];
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+    for (i = 0; i < byteString.length; i++){
+      ia[i] = byteString.charCodeAt(i);
+    }
+    var blob = new Blob([ab], {
+      type : mime
+    });
+    return URL.createObjectURL(blob);
+  } catch (error) {
+    alert('Failed to convert data URL to Blob URL');
+    console.error('Failed to convert data URL to Blob URL:', error);
+  }
+}
+
+function generateRandomString() {
+  var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  var result = '';
+  
+  for (var i = 0; i < 10; i++) {
+    var randomIndex = Math.floor(Math.random() * chars.length);
+    result += chars.charAt(randomIndex);
+  }
+  
+  return result;
+}
+
+var channel = generateRandomString();
+const bc = new BroadcastChannel(channel);
+
+loadScripts([gamPath], function (error){
+  if (error) {
+    alert('Failed to load scripts: ' + error.message);
+    console.error('Failed to load scripts:', error);
+    return;
+  }
+    var frame = document.createElement('iframe');
+    frame.setAttribute('frameborder', 0);
+    frame.style.width = '100%';
+    frame.style.height = '100%';
+    frame.style.margin = '0';
+    frame.style.padding = '0';
+    frame.src = "g/Ruffle/player.html?channel="+channel;
+    document.body.appendChild(frame);
+    frame.onload = function() {
+     bc.postMessage({type: "swf", data: window.data});
+    }
+});
+
+bc.onmessage = (event) => {
+   var eventType = (event.data.type);
+   if (eventType == 'close') {
+    bc.close();
+   }
+};
+</script>
+</body>
+</html>
