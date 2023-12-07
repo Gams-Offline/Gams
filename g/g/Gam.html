@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.svg {
+float: left;
+}
+
+svg {
+max-width:50px;
+min-width:40px;
+width:5%;
+height:auto;
+fill: black;
+margin:10px;
+}
+
+svg:hover {
+cursor: pointer;
+fill: grey;
+}
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 100; /* Sit on top */
+  padding-top: 10px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@media (prefers-color-scheme: dark) {
+.modal-content {
+color: #eee;
+    background: #121212;
+}
+
+  body {
+    color: #eee;
+    background: #121212;
+  }
+  svg {
+fill: grey;
+  }
+  svg:hover {
+cursor: pointer;
+fill: white;
+  }
+} 
+</style>
+</head>
+<body>
+<!-- The Modal -->
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h1>Settings</h1>
+    <p>Choose your settings below.</p>
+    <hr>
+
+      <label for="windowLock">Window Lock:</label>
+      <input type="checkbox" id="windowLock" onchange="toggleWindowLock()">
+<br>
+    <label for="mySlider">Brightness:</label>
+    <input type="range" min="10" max="200" value="100" style="width: 200px; background: grey;" id="mySlider" oninput="updateFilters()">
+    <br>
+    <label for="contrastSlider">Contrast:</label>
+    <input type="range" min="0" max="200" value="100" style="width: 200px; background: grey;" id="contrastSlider" oninput="updateFilters()">
+    <br>
+    <label for="hueSlider">Hue:</label>
+    <input type="range" min="0" max="360" value="0" style="width: 200px; background: grey;" id="hueSlider" oninput="updateFilters()">
+    <br>
+    <label for="blurSlider">Blur:</label>
+    <input type="range" min="0" max="10" value="0" step="0.1" style="width: 200px; background: grey;" id="blurSlider" oninput="updateFilters()">
+    <br>
+    <label for="saturateSlider">Saturate:</label>
+    <input type="range" min="0" max="200" value="100" style="width: 200px; background: grey;" id="saturateSlider" oninput="updateFilters()">
+    <br>
+    <label for="grayscaleSlider">Grayscale:</label>
+    <input type="range" min="0" max="100" value="0" style="width: 200px; background: grey;" id="grayscaleSlider" oninput="updateFilters()">
+    <br>
+    <label for="sepiaSlider">Sepia:</label>
+    <input type="range" min="0" max="100" value="0" style="width: 200px; background: grey;" id="sepiaSlider" oninput="updateFilters()">
+    <br>
+    <label for="invertSlider">Invert:</label>
+    <input type="range" min="0" max="100" value="0" style="width: 200px; background: grey;" id="invertSlider" oninput="updateFilters()">
+    <br>
+    <label for="opacitySlider">Opacity:</label>
+    <input type="range" min="0" max="1" value="1" step="0.1" style="width: 200px; background: grey;" id="opacitySlider" oninput="updateFilters()">
+    <br>
+    <label for="dropShadowSlider">Drop Shadow:</label>
+    <input type="range" min="0" max="10" value="0" step="0.1" style="width: 200px; background: grey;" id="dropShadowSlider" oninput="updateFilters()">
+  </div>
+ </div>
+  <script>
+    function updateFilters() {
+      var brightness = document.getElementById("mySlider").value;
+      var contrast = document.getElementById("contrastSlider").value;
+      var hue = document.getElementById("hueSlider").value;
+      var blur = document.getElementById("blurSlider").value;
+      var saturate = document.getElementById("saturateSlider").value;
+      var grayscale = document.getElementById("grayscaleSlider").value;
+      var sepia = document.getElementById("sepiaSlider").value;
+      var invert = document.getElementById("invertSlider").value;
+      var opacity = document.getElementById("opacitySlider").value;
+      var dropShadow = document.getElementById("dropShadowSlider").value;
+
+      var filterValue = `brightness(${brightness}%) contrast(${contrast}%) hue-rotate(${hue}deg) blur(${blur}px) saturate(${saturate}%) grayscale(${grayscale}%) sepia(${sepia}%) invert(${invert}%)`;
+      document.body.style.filter = filterValue;
+
+      document.body.style.opacity = opacity;
+
+      var dropShadowValue = `0 0 ${dropShadow}px rgba(0, 0, 0, 0.5)`;
+      document.body.style.boxShadow = dropShadowValue;
+    }
+    
+ function toggleWindowLock() {
+  var windowLockCheckbox = document.getElementById("windowLock");
+  if (windowLockCheckbox.checked) {
+    window.onbeforeunload = function () {
+      return "Are you sure you want to leave this page? Your changes may not be saved.";
+    };
+  } else {
+    window.onbeforeunload = null;
+  }
+}
+  </script>
+
+<header>
+<h1 id="name">---</h1>
+</header>
+
+<a style='float:left;' href='../../Gams.html' id="backHome"><div title="Back To Home Page" style="max-width:50px;min-width:40px;width:5%;height:auto;margin:10px;"><svg viewBox="0 50 219 248"><g transform="translate(0 248) scale(.1 -.1)">
+<path d="m350 1635-315-315 318-317 317-318 67 68 68 67-400 400h883 882v95 95h-887-888l410 410-65 65c-35 36-67 65-70 65s-147-142-320-315z"/></g></svg></div>
+</a>
+
+<div class="svg" title="Fullscreen" onclick="openFullscreen('frame')">
+<svg viewBox="0 0 385 385"><path d="M385 12a12 12 0 0 0-12-12H264.8c-6.9 0-12 5.4-12 12.2s5.1 11.9 12 11.9h96l-.2 96.5c0 6.8 5.2 12 12 12 6.9 0 12-5.2 12-12l.3-108.4V12zM120.5 0H12.2a12 12 0 0 0-12 12L0 120.4c0 6.8 5.4 12 12.2 12s11.9-5.2 11.9-12l.2-96.3h96.2c6.8 0 12-5.2 12-12 0-6.9-5.2-12.1-12-12.1zm-.4 361h-96v-96.3c0-6.9-5.2-12-12-12S0 257.7 0 264.6v108.3a12 12 0 0 0 12 12h108.1c6.9 0 12-5.3 12-12.2 0-6.8-5.1-11.8-12-11.8zm252.7-108c-6.9 0-11.9 5-11.9 11.8V361h-96.2c-6.9 0-12 5.2-12 12s5.1 12 12 12h108.2a12 12 0 0 0 12-12V265c0-6.9-5.3-12-12.2-12z"></svg>
+</div>
+
+<div class="svg" title="Settings" id="settingsButton">
+<svg viewBox="0 0 48 48"><path d="M38.86 25.95c.08-.64.14-1.29.14-1.95s-.06-1.31-.14-1.95l4.23-3.31c.38-.3.49-.84.24-1.28l-4-6.93c-.25-.43-.77-.61-1.22-.43l-4.98 2.01c-1.03-.79-2.16-1.46-3.38-1.97l-.75-5.3c-.09-.47-.5-.84-1-.84h-8c-.5 0-.91.37-.99.84l-.75 5.3c-1.22.51-2.35 1.17-3.38 1.97l-4.98-2.01c-.45-.17-.97 0-1.22.43l-4 6.93c-.25.43-.14.97.24 1.28l4.22 3.31c-.08.64-.14 1.29-.14 1.95s.06 1.31.14 1.95l-4.22 3.31c-.38.3-.49.84-.24 1.28l4 6.93c.25.43.77.61 1.22.43l4.98-2.01c1.03.79 2.16 1.46 3.38 1.97l.75 5.3c.08.47.49.84.99.84h8c.5 0 .91-.37.99-.84l.75-5.3c1.22-.51 2.35-1.17 3.38-1.97l4.98 2.01c.45.17.97 0 1.22-.43l4-6.93c.25-.43.14-.97-.24-1.28l-4.22-3.31zm-14.86 5.05c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"></svg>
+</div>
+
+<iframe src="" id="frame" style="height:calc(100vh - 30px);width:calc(100vw - 30px)" frameborder=0></iframe>
+<script>
+const BroadcastDisguise = new BroadcastChannel('BroadcastDisguise');
+
+var settingsButton = document.getElementById('settingsButton');
+var modal = document.getElementById("myModal");
+
+var span = document.getElementsByClassName("close")[0];
+settingsButton.onclick = function() {
+  modal.style.display = "block";
+}
+span.onclick = function() {
+  modal.style.display = "none";
+}
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+function openFullscreen(e){document.getElementById(e).requestFullscreen?document.getElementById(e).requestFullscreen():document.getElementById(e).webkitRequestFullscreen?document.getElementById(e).webkitRequestFullscreen():document.getElementById(e).msRequestFullscreen&&document.getElementById(e).msRequestFullscreen()}
+
+
+function setFavicon(href) {
+  var existFav = document.querySelectorAll('link[rel*="icon"]');
+  existFav.forEach(function(favicon) {
+    favicon.parentNode.removeChild(favicon);
+  });
+
+  var link = document.createElement('link');
+  link.type = 'image/x-icon';
+  link.rel = 'icon';
+  link.href = href;
+  document.getElementsByTagName('head')[0].appendChild(link);
+}
+
+function l(e){return document.getElementById(e)}
+var urlParams = new URLSearchParams(window.location.search);
+var name = (urlParams.get('name') || 'Gam');
+var icon = (urlParams.get('icon') || '');
+var src = (urlParams.get('src') || '');
+
+l("name").innerHTML = name;
+document.title = name;
+
+setFavicon(icon);
+
+l("frame").src = src;
+
+const ogTitle = document.title;
+const ogIcon = document.querySelectorAll('link[rel*="icon"]')[0].href;
+
+function getStoredJSON(key, data) {
+ if (data && data.key && (localStorage[key] != 'null')) {
+  var inStore = JSON.parse(localStorage[key]);
+  if ((typeof inStore == 'object') && inStore.hasOwnProperty(data.key)) {
+   return inStore[data.key];
+  }
+ }
+ if (localStorage[key] && !data) {
+  return JSON.parse(localStorage[key]);
+ }
+ return null;
+}
+
+function storeJSON(key, data) {
+ if (localStorage[key]) {
+  var inStore = JSON.parse(localStorage[key]) || {};
+  inStore[data.key] = data.value;
+  localStorage[key] = JSON.stringify(inStore);
+ }else{
+  var inStore = {};
+  inStore[data.key] = data.value;
+  localStorage[key] = JSON.stringify(inStore);
+ }
+ 
+ return localStorage[key];
+}
+
+function applyDisguise() {
+ var icon = getStoredJSON('gams', {key: 'icon'});
+ var title = getStoredJSON('gams', {key: 'title'});
+ if (title) {
+  document.title = (title);
+ }else{
+  document.title = (ogTitle);
+ }
+
+ if (icon) {
+  setFavicon(icon)
+ }else{
+  setFavicon(ogIcon)
+ }
+}
+
+applyDisguise();
+
+BroadcastDisguise.onmessage = () => {
+applyDisguise();
+};
+</script>
+</body>
+</html>
