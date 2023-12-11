@@ -171,8 +171,8 @@ transform: translateX(-50%) translateY(-50%);
 <br>
 <label>Open Gam Mode:</label>
 <select onchange='changeGamMode(this)' id='gamMode'>
-<option value="embed">On this tab</option>
 <option value="gam">In new tab</option>
+<option value="embed">On this tab</option>
 <option value="blank">In an about:blank tab</option>
 <option value="direct">Replace this tab</option>
 <option value="raw">Raw link in new tab</option>
@@ -469,7 +469,7 @@ container.appendChild(createElement('br'));
 l('contain').appendChild(container);
 
 
-var mode = 'embed'; //embed, gam, blank, direct
+var mode = 'gam'; //embed, gam, blank, direct
 //Init
 var gams = document.getElementsByClassName("tile");
 for (i = 0; i < gams.length; i++){
@@ -478,7 +478,7 @@ var href = (this.getElementsByClassName("href")[0].href);
 var name = (this.getElementsByClassName("name")[0].innerText);
 var pic = (this.getElementsByClassName("img")[0].src);
 
-mode = getStoredJSON('gams', {key: 'gamMode'}) || 'embed';
+mode = getStoredJSON('gams', {key: 'gamMode'}) || 'gam';
 
 if (mode == 'raw') {
 window.open(href);
