@@ -136,6 +136,27 @@ keyComboActive(e.key)
 }
 });
 </script>
+<script>
+// Make the word mine bigger to brag more :)
+window.onclick = brag;
+window.hasBragged = false;
+function brag() {
+if (window.hasBragged) {return}
+window.hasBragged = true;
+  const element = document.getElementById('mine');
+  const kbdElement = document.createElement('kbd');
+  Array.from(element.attributes).forEach((attr) => {
+    kbdElement.setAttribute(attr.name, attr.value);
+  });
+  const originalInnerHTML = element.innerHTML;
+  
+  // Remove HTML tags to prevent errors
+  const modifiedInnerHTML = `/${originalInnerHTML.slice(0).split('<').map(fragment => fragment.split('>').pop()).join('')}`;
+  
+  kbdElement.innerHTML = modifiedInnerHTML;
+  element.parentNode.replaceChild(kbdElement, element);
+}
+</script>
     <header>
         <h1>About</h1>
         <nav>
@@ -143,35 +164,40 @@ keyComboActive(e.key)
             <a href="../Settings.html">Settings</a>
         </nav>
     </header>
-<h3>What is Gams?</h3>
-<p>This site allow you to play fun games, offline, which is perfect for when you have low, or no internet connection.</p>
-<p>This means that the way some games are loaded are NOT the most efficient or "best" way, they are just focused of being offline.</p>
-<p>This site is also pretty minimal since I didn't want to spend much time designing it, but it's functional.</p>
+<section>
+    <h3>What is Gams?</h3>
+    <p>Gams is a website that offers a collection of fun games that you can play offline, making it perfect for those moments when you have a low or no internet connection.</p>
+    <p>Unlike many other gaming platforms, Gams prioritizes offline gameplay rather than focusing on the most efficient or "best" way to load games. The primary goal is to provide an enjoyable gaming experience even without an internet connection.</p>
+    <p>While the site design is intentionally kept minimal to save time, it remains fully functional and user-friendly.</p>
+</section>
 
-<h3>Why Gams?</h3>
-<ul>
-<li>Simple - No overcomplicated styling</li>
-<li>Unique - Not many similar projects</li>
-<li>Easy To Use - One file to download and extract, and one file to open.</li>
-<li>Dark Mode - Dark mode = Good.</li>
-</ul>
+<section>
+    <h3>Why Choose Gams?</h3>
+    <ul>
+        <li>Simple Design: Gams features a straightforward and uncluttered interface without overcomplicated styling.</li>
+        <li>Unique Selection: Gams stands out from similar projects, offering a distinct collection of games.</li>
+        <li>Easy to Use: With just one file to download and extract, and another file to open, Gams ensures a hassle-free gaming experience.</li>
+        <li>Dark Mode: Gams supports a dark mode, providing a visually pleasing and comfortable gaming environment.</li>
+    </ul>
+</section>
 
-<h3>How does Gams work?</h3>
-<p>The main reason games don't usually work offline is because browsers limit access to outside resources from inside local files for obvious reasons.</p>
-<p>I did notice however, that script files and style files are allowed to be used.</p>
-<p>So the site works around requesting external resources by simply turning it to dataURL's which are like self-contained versoins of the orignal file.</p>
-<p>With this technique, the games are playable offline.</p>
-<blockquote><i>This site is styled using the default new.css theme. <a href="https://github.com/xz/new.css-site/blob/master/index.html" target="_blank">View Source</a></i></blockquote>
-<input type="password" oninput="keyComboActive(this.value);this.value=''">
-<blockquote><i>This site uses Ruffle to emulate the flash content. <a href="https://ruffle.rs" target="_blank">View Ruffle</a></i></blockquote>
+<section>
+    <h3>How Does Gams Work?</h3>
+    <p>Typically, games require an internet connection due to browser restrictions on accessing external resources from local files. However, Gams employs a clever workaround to enable offline gameplay.</p>
+    <p>By converting external resources, such as script files and style files, into data URLs, Gams creates self-contained versions of the original files. These data URLs allow the games to be loaded and played offline.</p>
+    <blockquote><i>This site is styled using the default new.css theme. <a href="https://github.com/xz/new.css-site/blob/master/index.html" target="_blank">View Source</a></i></blockquote>
+    <input type="password" oninput="keyComboActive(this.value);this.value=''">
+    <blockquote><i>This site uses Ruffle to emulate Flash content. <a href="https://ruffle.rs" target="_blank">View Ruffle</a></i></blockquote>
+</section>
 
-<h3>Other notes about Gams</h3>
-<p>This site didn't take me very long to make.</p>
-<p>You should play Drive Mad, because I'm surprized I got it to work.</p>
-<p>I will probably hardly ever update this site, because I made it for fun.</p>
-<p>The games on this site are fun, and it's a good site because I made it. It's <kbd title="keyboard">/mine</kbd>. That makes it immediately good right?</p>
-<p>There might be hidden features here, who knows.</p>
-<p>Ruffle is an amazing piece of software, I'm so shocked how advanced the web, and browsers are.</p>
-
+<section>
+    <h3>Additional Notes about Gams</h3>
+    <ul>
+        <li>Recommended Game: Seriously, you have to try Drive Mad. I'm still amazed I got it to work!</li>
+        <li>Updates? Maybe Not: Honestly, I made this site for fun, so don't expect frequent updates.</li>
+        <li>Quality Assurance? Sure: I carefully handpicked the games on this site to make sure you have a blast. Trust me, Gams is a site made with heart and excitement.</li>
+        <li>Ruffle Rocks: I gotta give a shoutout to Ruffle. It's an awesome piece of software that lets us run Flash content on this site. Web tech has come a long way!</li>
+        <li>Mine, all mine: Gams is <span title="*I'm great*" id="mine">mine</span>, my project, not the games, the project.
+</section>
 </body>
 </html>
