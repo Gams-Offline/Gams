@@ -152,15 +152,11 @@ transform: translateX(-50%) translateY(-50%);
 </style>
 <script src='i.js'></script>
 </head>
+
 <body onload="setSavedTheme()">
 <header>
 <h1 class="title">Gams</h1>
 </header>
-
-<label>Search:</label>
-<input id="searchQuery" type="search" onload="startSearch()" onkeyup="startSearch()" autocomplete="off">
-
-<br>
 
 <label>Dark Mode:</label>
 <label class="switch">
@@ -168,7 +164,10 @@ transform: translateX(-50%) translateY(-50%);
 <span class="slider round"></span>
 </label>
 
-<br>
+<br><br>
+
+<p>Total Games: <span id="totalGames">Loading...</span></p>
+
 <label>Open Gam Mode:</label>
 <select onchange='changeGamMode(this)' id='gamMode'>
 <option value="gam">In new tab</option>
@@ -196,6 +195,10 @@ transform: translateX(-50%) translateY(-50%);
 <a href="Settings.html" class="tile"><img class="img" src="img/gams-g.png"><p class="name">Settings</p></a>
 <a href="g/about.html" class="tile"><img class="img" src="img/gams-g.png"><p class="name">About</p></a>
 
+</div>
+
+<div id="searcher">
+<div onclick="searchbar(this)" style="position:fixed; width: 50px; right: 10px; top: 10px; z-index: 100; font-size:13pt; transition: all 0.3s ease-in-out;"><svg style="max-width: 100%; fill: var(--nc-tx-2);" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg></div>
 </div>
 
 <script>
@@ -229,6 +232,21 @@ document.documentElement.style.setProperty('--nc-lk-2', "#0070F3");
 document.documentElement.style.setProperty('--nc-lk-tx', "#FFFFFF");
 document.documentElement.style.setProperty('--nc-ac-1', "#7928CA");
 document.documentElement.style.setProperty('--nc-ac-tx', "#FFFFFF");
+}
+
+function searchbar(elm) {
+elm.remove()
+l('searcher').innerHTML += `<input id="searchQuery" type="search" onload="startSearch()" onkeyup="startSearch()" placeholder="Search..." autocomplete="off" style="position:fixed; width: 20px; right: 10px; top: 10px; z-index: 100; font-size:13pt; transition: all 0.5s ease-in-out;" onblur="searchicon(this)" onfocus="this.style.width = '120px'">`;
+l('searchQuery').focus();
+l('searchQuery').style.width = '120px';
+}
+
+function searchicon(elm) {
+elm.style.width = '20px';
+setTimeout(function(){
+elm.remove();
+l('searcher').innerHTML += `<div onclick="searchbar(this)" style="position:fixed; width: 50px; right: 10px; top: 10px; z-index: 100; font-size:13pt; transition: all 0.3s ease-in-out;"><svg style="max-width: 100%; fill: var(--nc-tx-2);" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg></div>`;
+}, 500);
 }
 
 function getStoredJSON(key, data) {
@@ -350,6 +368,8 @@ elm.setAttribute(props[i], prps[props[i]]);
 return elm;
 }
 
+var totalGames = 0;
+
 var gamsList = [
 {title: "Basic", type: "section"},
 {name: "Stickman Hook"},
@@ -408,6 +428,18 @@ var gamsList = [
 {name: "Bloons Tower Defense 1"},
 {name: "Bloons Tower Defense 2"},
 {name: "Bloons Tower Defense 5"},
+{name: "Cat Ninja"},
+{name: "Pacman"},
+{name: "1 on 1 Soccer"},
+{name: "QWOP"},
+{name: "Use Boxmen"},
+{name: "40x Escape"},
+{name: "Stickman Life"},
+{name: "Duck Life 1"},
+{name: "Duck Life 2"},
+{name: "Duck Life 3"},
+{name: "Duck Life 4"},
+{name: "Duck Life 5"},
 
 {title: "Tools", type: "section"},
 {name: "Ruffle Flash Player", href: "g/g/Ruffle/Ruffle.html"},
@@ -423,6 +455,7 @@ for (j = 0; j < gamsList.length; j++){
 if (gamsList[j].title) {currentSection = gamsList[j].title}
 
 if(gamsList[j].name){
+totalGames += 1;
 var tile = createElement('div', {
 class : 'tile'
 });
@@ -467,7 +500,7 @@ container.appendChild(createElement('br'));
 }
 }
 l('contain').appendChild(container);
-
+l('totalGames').innerText = totalGames;
 
 var mode = 'gam'; //embed, gam, blank, direct
 //Init
@@ -615,6 +648,5 @@ BroadcastDisguise.onmessage = () => {
 applyDisguise();
 };
 </script>
- <script src="assets/preview.js"></script>
 </body>
 </html>
