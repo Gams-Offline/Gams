@@ -171,11 +171,22 @@ transform: translateX(-50%) translateY(-50%);
 
 <label>Open Gam Mode:</label>
 <select onchange='changeGamMode(this)' id='gamMode'>
-  <option value="gam">In new tab</option>
   <option value="embed">In this tab</option>
+  <option value="gam">In new tab</option>
   <option value="blank">In an about:blank tab</option>
   <option value="direct">Replace this tab</option>
   <option value="raw">Raw link in new tab</option>
+</select>
+
+<br><hr><br>
+
+<label>Display the popout menu with mode "In new tab" from:</label>
+<select onchange='changePopoutMode(this)' id='popoutMode'>
+  <option value="top">Select</option>
+  <option value="top">Top</option>
+  <option value="bottom">Bottom</option>
+  <option value="left">Left</option>
+  <option value="right">Right</option>
 </select>
 
 <br><hr><br>
@@ -294,6 +305,13 @@ function changeTheme(input) {
 function changeGamMode(input) {
  storeJSON('gams', {
   key: 'gamMode',
+  value: input.value
+ });
+}
+
+function changePopoutMode(input) {
+ storeJSON('gams', {
+  key: 'popoutMode',
   value: input.value
  });
 }
