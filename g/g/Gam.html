@@ -2,6 +2,22 @@
 <html>
 <head>
 <style>
+:root{
+--tx: black;
+--bg: #fefefe;
+--bg-2: #eceaea;
+--fill: black;
+--fill-hover: grey;
+}
+
+html, body {
+ margin: 0px;
+ padding: 0px;
+ overflow: hidden;
+ background-color: var(--bg);
+ color: var(--tx);
+}
+
 .svg {
 float: left;
 }
@@ -11,13 +27,13 @@ max-width:50px;
 min-width:40px;
 width:5%;
 height:auto;
-fill: black;
+fill: var(--fill);
 margin:10px;
 }
 
 svg:hover {
 cursor: pointer;
-fill: grey;
+fill: var(--fill-hover);
 }
 
 .modal {
@@ -36,11 +52,12 @@ fill: grey;
 
 /* Modal Content */
 .modal-content {
-  background-color: #fefefe;
+  background-color: var(--bg);
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
+  color: var(--tx);
 }
 
 /* The Close Button */
@@ -59,22 +76,15 @@ fill: grey;
 }
 
 @media (prefers-color-scheme: dark) {
-.modal-content {
-color: #eee;
-    background: #121212;
+
+:root{
+--tx: #eee;
+--bg: #121212;
+--bg-2: #202020;
+--fill: grey;
+--fill-hover: white;
 }
 
-  body {
-    color: #eee;
-    background: #121212;
-  }
-  svg {
-fill: grey;
-  }
-  svg:hover {
-cursor: pointer;
-fill: white;
-  }
 } 
 </style>
 </head>
@@ -87,7 +97,7 @@ fill: white;
     <p>Choose your settings below.</p>
     <hr>
 
-      <label for="windowLock">Window Lock:</label>
+      <label for="windowLock">Ask Before Closing Window:</label>
       <input type="checkbox" id="windowLock" onchange="toggleWindowLock()">
 <br>
     <label for="mySlider">Brightness:</label>
@@ -154,8 +164,97 @@ fill: white;
   }
 }
   </script>
+  <script>
+function getStoredJSON(key, data) {
+ if (data && data.key && (localStorage[key] != 'null')) {
+  var inStore = JSON.parse(localStorage[key]);
+  if ((typeof inStore == 'object') && inStore.hasOwnProperty(data.key)) {
+   return inStore[data.key];
+  }
+ }
+ if (localStorage[key] && !data) {
+  return JSON.parse(localStorage[key]);
+ }
+ return null;
+}
 
-<header>
+function storeJSON(key, data) {
+ if (localStorage[key]) {
+  var inStore = JSON.parse(localStorage[key]) || {};
+  inStore[data.key] = data.value;
+  localStorage[key] = JSON.stringify(inStore);
+ }else{
+  var inStore = {};
+  inStore[data.key] = data.value;
+  localStorage[key] = JSON.stringify(inStore);
+ }
+ 
+ return localStorage[key];
+}
+  </script>
+  <script src='i.js'></script>
+<script>
+var infoMenuDisplay = "top"; //top, bottom, left, right
+
+if (getStoredJSON('gams') && getStoredJSON('gams', {key: 'popoutMode'})) {
+ var popoutMode = getStoredJSON('gams', {key: 'popoutMode'});
+ infoMenuDisplay = popoutMode;
+}
+
+var awayFromSide1 = "left";
+var awayFromSide2 = "bottom";
+var translateSide = "translateX";
+var popOutDistance = "162px";
+
+if (infoMenuDisplay == "top") {
+ awayFromSide1 = "left";
+ awayFromSide2 = "bottom";
+ translateSide = "translateX";
+}else if (infoMenuDisplay == "bottom") {
+ awayFromSide1 = "left";
+ awayFromSide2 = "top";
+ translateSide = "translateX";
+}else if (infoMenuDisplay == "left") {
+ awayFromSide1 = "top";
+ awayFromSide2 = "right";
+ translateSide = "translateY";
+ popOutDistance = "422px";
+}else if (infoMenuDisplay == "right") {
+ awayFromSide1 = "top";
+ awayFromSide2 = "left";
+ translateSide = "translateY";
+ popOutDistance = "422px";
+}
+
+var style = `
+.info-menu {
+  background-color: var(--bg-2);
+  color: var(--tx);
+  position: fixed;
+  ${awayFromSide1}: 50%;
+  ${awayFromSide2}: calc(100% - 10px);
+  transform: ${translateSide}(-50%);
+  border-radius: 10px;
+  height: 140px;
+  width: 400px;
+  padding: 10px;
+  transition: all 1s ease-in-out;
+  border: 1px solid;
+}
+
+.info-menu:hover {
+ ${awayFromSide2}: calc(100% - ${popOutDistance});
+}
+`;
+
+var styleElm = document.createElement('style');
+styleElm.innerHTML = style;
+document.body.appendChild(styleElm);
+</script>
+<div class="info-menu">
+
+<img id="icon-img" style="width:50px;height:50px;border-radius:10px;" src="" ondblclick="Function(prompt())()">
+<header style="overflow: scroll; height: 80px; width: 340px; float: right; margin-left: 10px;">
 <h1 id="name">---</h1>
 </header>
 
@@ -171,7 +270,9 @@ fill: white;
 <svg viewBox="0 0 48 48"><path d="M38.86 25.95c.08-.64.14-1.29.14-1.95s-.06-1.31-.14-1.95l4.23-3.31c.38-.3.49-.84.24-1.28l-4-6.93c-.25-.43-.77-.61-1.22-.43l-4.98 2.01c-1.03-.79-2.16-1.46-3.38-1.97l-.75-5.3c-.09-.47-.5-.84-1-.84h-8c-.5 0-.91.37-.99.84l-.75 5.3c-1.22.51-2.35 1.17-3.38 1.97l-4.98-2.01c-.45-.17-.97 0-1.22.43l-4 6.93c-.25.43-.14.97.24 1.28l4.22 3.31c-.08.64-.14 1.29-.14 1.95s.06 1.31.14 1.95l-4.22 3.31c-.38.3-.49.84-.24 1.28l4 6.93c.25.43.77.61 1.22.43l4.98-2.01c1.03.79 2.16 1.46 3.38 1.97l.75 5.3c.08.47.49.84.99.84h8c.5 0 .91-.37.99-.84l.75-5.3c1.22-.51 2.35-1.17 3.38-1.97l4.98 2.01c.45.17.97 0 1.22-.43l4-6.93c.25-.43.14-.97-.24-1.28l-4.22-3.31zm-14.86 5.05c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"></svg>
 </div>
 
-<iframe src="" id="frame" style="height:calc(100vh - 30px);width:calc(100vw - 30px)" frameborder=0></iframe>
+</div>
+
+<iframe src="" onload="this.focus();" id="frame" style="height:100vh;width:100vw" frameborder=0></iframe>
 <script>
 const BroadcastDisguise = new BroadcastChannel('BroadcastDisguise');
 
@@ -216,39 +317,44 @@ var src = (urlParams.get('src') || '');
 l("name").innerHTML = name;
 document.title = name;
 
+l("icon-img").src = icon;
 setFavicon(icon);
 
+l("frame").focus();
 l("frame").src = src;
+l("frame").focus();
 
 const ogTitle = document.title;
 const ogIcon = document.querySelectorAll('link[rel*="icon"]')[0].href;
 
-function getStoredJSON(key, data) {
- if (data && data.key && (localStorage[key] != 'null')) {
-  var inStore = JSON.parse(localStorage[key]);
-  if ((typeof inStore == 'object') && inStore.hasOwnProperty(data.key)) {
-   return inStore[data.key];
-  }
- }
- if (localStorage[key] && !data) {
-  return JSON.parse(localStorage[key]);
- }
- return null;
+function setLight() {
+document.documentElement.style.setProperty('--tx', "black");
+document.documentElement.style.setProperty('--bg', "#fefefe");
+document.documentElement.style.setProperty('--bg-2', "#eceaea");
+document.documentElement.style.setProperty('--fill', "black");
+document.documentElement.style.setProperty('--fill-hover', "grey");
 }
 
-function storeJSON(key, data) {
- if (localStorage[key]) {
-  var inStore = JSON.parse(localStorage[key]) || {};
-  inStore[data.key] = data.value;
-  localStorage[key] = JSON.stringify(inStore);
- }else{
-  var inStore = {};
-  inStore[data.key] = data.value;
-  localStorage[key] = JSON.stringify(inStore);
- }
- 
- return localStorage[key];
+function setDark() {
+document.documentElement.style.setProperty('--tx', "#eee");
+document.documentElement.style.setProperty('--bg', "#121212");
+document.documentElement.style.setProperty('--bg-2', "#202020");
+document.documentElement.style.setProperty('--fill', "grey");
+document.documentElement.style.setProperty('--fill-hover', "white");
 }
+
+function setSavedTheme() {
+if (getStoredJSON('gams') && getStoredJSON('gams', {key: 'theme'})) {
+var theme = getStoredJSON('gams', {key: 'theme'});
+if (theme == 'light') {
+setLight();
+} else if (theme == 'dark') {
+setDark();
+}
+}
+}
+
+setSavedTheme();
 
 function applyDisguise() {
  var icon = getStoredJSON('gams', {key: 'icon'});
