@@ -1,0 +1,76 @@
+
+<body style="width:100vw;height:100vh;margin:0;padding:0">
+<script src="3f10346d8b279bfaf28e.wasm.js"></script>
+<script src="ff0bf2c212bda277b0ed.wasm.js"></script>
+<script src="ruffle.js"></script>
+<script>
+function loadScripts(scripts, callback){
+  var loadedCount = 0;
+  function scriptLoaded(){
+    loadedCount++ ;
+    if(loadedCount === scripts.length){
+      callback(null);
+    }
+  }
+  scripts.forEach(function (script){
+    var scriptTag = document.createElement('script');
+    scriptTag.src = script;
+    scriptTag.onload = scriptLoaded;
+    scriptTag.onerror = function() {
+      callback(new Error('Failed to load script: ' + script));
+    };
+    document.head.appendChild(scriptTag);
+  });
+}
+
+function dataURLtoBlobURL(dataURL){
+  try {
+    var byteString = atob(dataURL.split(',')[1]);
+    var mime = dataURL.split(',')[0].split(':')[0];
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+    for (i = 0; i < byteString.length; i++){
+      ia[i] = byteString.charCodeAt(i);
+    }
+    var blob = new Blob([ab], {
+      type : mime
+    });
+    return URL.createObjectURL(blob);
+  } catch (error) {
+    alert('Failed to convert data URL to Blob URL');
+    console.error('Failed to convert data URL to Blob URL:', error);
+  }
+}
+
+const urlParams = new URLSearchParams(window.location.search);
+const channel = (urlParams.get('channel') || 'swf_channel');
+
+document.title = channel;
+
+const bc = new BroadcastChannel(channel);
+
+bc.onmessage = (event) => {
+    var eventType = (event.data.type);
+    var eventData = (event.data.data);
+    
+   if (eventType == 'swf') {
+    var dataURL = eventData;
+    var blobURL = dataURLtoBlobURL(dataURL);
+    var embed = document.createElement('embed');
+    embed.width = '100%';
+    embed.height = '100%';
+    embed.name = 'plugin';
+    embed.id = 'plugin';
+    embed.type = 'application/x-shockwave-flash'
+    embed.src = blobURL;
+    document.body.appendChild(embed);
+    bc.postMessage({type: 'close'});
+    bc.close();
+   }
+    
+   if (eventType == 'close') {
+    bc.close();
+   }
+};
+</script>
+</body>

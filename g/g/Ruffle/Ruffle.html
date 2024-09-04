@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html data-ruffle-optout>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ruffle</title>
+    <style>
+:root {
+--ruffle-blue: #37528c;
+--ruffle-orange: #ffad33;
+--preloader-background: #31497d;
+}
+
+body {
+position: absolute;
+top: 0;
+bottom: 0;
+left: 0;
+right: 0;
+padding: 0;
+margin: 0;
+font-family: Lato, sans-serif;
+display: flex;
+flex-flow: column;
+background: black;
+}
+
+#main {
+position: relative;
+flex: 1;
+}
+
+#nav {
+width: 100%;
+background: var(--ruffle-blue);
+box-shadow: 0 3px 6px 5px var(--ruffle-blue);
+display: flex;
+align-items: center;
+justify-content: space-around;
+color: white;
+padding: 10px 0 5px;
+margin-bottom: 5px;
+}
+
+#title {
+transition: opacity 0.5s;
+}
+
+#title:hover {
+opacity: 0.5;
+}
+
+#title img {
+height: 32px;
+}
+
+#file-picker select,
+#file-picker input,
+#author {
+margin-left: 5px;
+}
+
+#local-file-container,
+#sample-swfs-container {
+display: inline-block;
+vertical-align: middle;
+}
+
+#local-file {
+width: 0;
+opacity: 0;
+position: absolute;
+}
+
+#local-file-label {
+color: var(--ruffle-blue);
+padding: 3px 10px;
+margin: 5px 2px;
+cursor: pointer;
+border-radius: 50px;
+background-color: white;
+}
+
+#local-file-name {
+min-width: 150px;
+display: inline-block;
+font-size: smaller;
+}
+
+.hidden {
+display: none !important;
+}
+
+@media only screen and (max-width: 800px) {
+#local-file-container,
+#sample-swfs-container {
+display: block;
+}
+
+#local-file-container {
+margin-bottom: 10px;
+}
+}
+
+@media only screen and (max-width: 600px) {
+#local-file-static-label,
+#sample-swfs-label {
+display: block;
+margin-bottom: 5px;
+}
+
+#nav {
+flex-flow: column;
+}
+}
+    </style>
+  </head>
+  <body>
+  
+<div id="allCont">
+  
+    <div id="nav">
+      <div id="title">
+        <a target="_blank" href="https://ruffle.rs/">
+          <img src="logo.svg" alt="Ruffle" data-canonical-src="logo.svg" />
+        </a>
+      </div>
+<div id="file-picker">
+        <div id="local-file-container">
+          <span id="local-file-static-label">Local SWF:</span>
+          <input type="file" accept=".swf,.spl" id="local-file" aria-describedby="local-file-static-label">
+          <label for="local-file" id="local-file-label">Select File</label>
+          <span id="local-file-name">No file selected.</span>
+        </div>
+
+</div>
+<script>
+var localFile = document.getElementById("local-file");
+var allCont = document.getElementById("allCont");
+
+localFile.addEventListener("change", (e => {
+  handleFileSelect(e.target.files[0])
+}))
+
+function dataURLtoBlobURL(dataURL){
+  try {
+    var byteString = atob(dataURL.split(',')[1]);
+    var mime = dataURL.split(',')[0].split(':')[0];
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+    for (i = 0; i < byteString.length; i++){
+      ia[i] = byteString.charCodeAt(i);
+    }
+    var blob = new Blob([ab], {
+      type : mime
+    });
+    return URL.createObjectURL(blob);
+  } catch (error) {
+    alert('Failed to convert data URL to Blob URL');
+    console.error('Failed to convert data URL to Blob URL:', error);
+  }
+}
+
+function generateRandomString() {
+  var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  var result = '';
+  
+  for (var i = 0; i < 10; i++) {
+    var randomIndex = Math.floor(Math.random() * chars.length);
+    result += chars.charAt(randomIndex);
+  }
+  
+  return result;
+}
+
+var channel = generateRandomString();
+const bc = new BroadcastChannel(channel);
+
+function handleFileSelect(file){
+
+allCont.innerHTML = '';
+
+  var reader = new FileReader();
+  reader.onload = function (e){
+    var dataURL = e.target.result;
+
+    var frame = document.createElement('iframe');
+    frame.setAttribute('frameborder', 0);
+    frame.style.width = '100%';
+    frame.style.height = '100%';
+    frame.style.margin = '0';
+    frame.style.padding = '0';
+    frame.src = "player.html?channel="+channel;
+    document.body.appendChild(frame);
+    frame.onload = function() {
+     bc.postMessage({type: "swf", data: dataURL});
+    }
+
+  };
+  reader.readAsDataURL(file);
+}
+
+bc.onmessage = (event) => {
+   var eventType = (event.data.type);
+   if (eventType == 'close') {
+    bc.close();
+   }
+};
+</script>
+  </body>
+</html>
