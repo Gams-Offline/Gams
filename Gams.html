@@ -504,6 +504,7 @@ l('totalGames').innerText = totalGames;
 
 var mode = 'gam'; //embed, gam, blank, direct
 //Init
+storeJSON('gams', { key: 'gamMode', value: mode });    
 var gams = document.getElementsByClassName("tile");
 for (i = 0; i < gams.length; i++){
 gams[i].onclick = function(e){
