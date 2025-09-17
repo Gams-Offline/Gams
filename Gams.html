@@ -1,158 +1,243 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Gams</title>
+<title>ClassLink — Game Portal</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <link type="image/x-icon" rel="icon" href="img/gams-g.png">
 <link rel="stylesheet" href="assets/new.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;400&display=swap" rel="stylesheet">
 <style>
-html, body {
-transition: .5s;
+:root {
+    --main-color: #2196F3;
+    --accent-color: #1a73e8;
+    --bg-gradient: linear-gradient(135deg, #1a73e8 0%, #2196F3 100%);
+    --card-bg: #fff;
+    --card-bg-dark: #181818;
+    --shadow: 0 2px 16px rgba(33, 150, 243, 0.08), 0 1.5px 4px rgba(0,0,0,0.05);
+    --shadow-hover: 0 8px 32px rgba(33,150,243,0.14), 0 3.5px 12px rgba(0,0,0,0.10);
+    --border-radius: 16px;
+    --section-title-size: 2.1em;
+    --section-title-weight: 700;
 }
 
-/*Override max width of body set in new.css*/
+html, body {
+    transition: .5s;
+    font-family: 'Montserrat', 'facon', sans-serif;
+    background: var(--bg-gradient);
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
 body {
- max-width: 1000px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 16px 48px 16px;
+    background: transparent;
 }
 
 @font-face {
-font-family: 'facon';
-src: url('assets/facon.ttf') format('truetype');
+    font-family: 'facon';
+    src: url('assets/facon.ttf') format('truetype');
 }
 
-.switch {
-position: relative;
-display: inline-block;
-width: 60px;
-height: 34px;
-}
-
-.switch input {
-opacity: 0;
-width: 0;
-height: 0;
-}
-
-.slider {
-position: absolute;
-cursor: pointer;
-top: 0;
-left: 0;
-right: 0;
-bottom: 0;
-background-color: #ccc;
--webkit-transition: .4s;
-transition: .4s;
-}
-
-.slider:before {
-position: absolute;
-content: "";
-height: 26px;
-width: 26px;
-left: 4px;
-bottom: 4px;
-background-color: white;
--webkit-transition: .4s;
-transition: .4s;
-}
-
-input:checked + .slider {
-background-color: #2196F3;
-}
-
-input:focus + .slider {
-box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
--webkit-transform: translateX(26px);
--ms-transform: translateX(26px);
-transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-border-radius: 34px;
-}
-
-.slider.round:before {
-border-radius: 50%;
+header {
+    text-align: center;
+    margin-bottom: 18px;
 }
 
 .title {
-font-size: 50pt;
-font-family: 'facon', sans-serif;
-letter-spacing: 3pt;
+    font-size: 68px;
+    font-family: 'Montserrat', 'facon', sans-serif;
+    letter-spacing: 2px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
+    text-shadow: 0 4px 24px #2196F388;
+    /* Add a fun glow effect for game style */
+    filter: drop-shadow(0 0 10px #2196F3);
+}
+
+.subtitle {
+    color: #e3e3e3;
+    font-size: 1.25em;
+    font-weight: 400;
+    margin-bottom: 12px;
+    text-shadow: 0 1px 8px #2196F344;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 56px;
+    height: 30px;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 22px; width: 22px;
+    left: 4px; bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
+input:checked + .slider { background-color: var(--main-color); }
+input:focus + .slider { box-shadow: 0 0 1px var(--main-color); }
+input:checked + .slider:before { transform: translateX(26px); }
+.slider.round { border-radius: 30px; }
+.slider.round:before { border-radius: 50%; }
+
+.section-title {
+    font-size: var(--section-title-size);
+    font-weight: var(--section-title-weight);
+    color: var(--accent-color);
+    margin-top: 40px;
+    margin-bottom: 18px;
+    clear: both;
+    font-family: 'Montserrat', sans-serif;
+    text-shadow: 0 2px 12px #2196F388;
+    letter-spacing: 1px;
 }
 
 .tile {
-color: var(--nc-tx-1);
-height: auto;
-width: auto;
-border-radius: 10px;
-border: 1px solid var(--nc-tx-1);
-text-align: center;
-position: relative;
-float: left;
-margin: 20px;
+    background: var(--card-bg);
+    color: #222;
+    box-shadow: var(--shadow);
+    border-radius: var(--border-radius);
+    border: 1px solid #e9e9e9;
+    text-align: center;
+    position: relative;
+    float: left;
+    margin: 20px 20px 20px 0;
+    width: 230px;
+    min-height: 310px;
+    transition: box-shadow .2s, transform .2s;
+    cursor: pointer;
+    padding-bottom: 18px;
+    overflow: hidden;
+    background-image: url('img/card-bg.png'); /* subtle background for game style */
+    background-size: cover;
+    background-blend-mode: lighten;
 }
-
 .tile img {
-width: 200px;
-height: 200px;
-border-radius: 10px;
+    width: 170px;
+    height: 170px;
+    border-radius: 12px;
+    margin-top: 20px;
+    box-shadow: 0 3px 18px rgba(33,150,243,0.13);
+    transition: transform .15s;
 }
-
+.tile:hover img {
+    transform: scale(1.08) rotate(-2deg);
+}
 .tile:hover {
-font-weight: bold;
-cursor: pointer;
-background: var(--nc-bg-3);
+    font-weight: bold;
+    background: #e3f1ff;
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-4px) scale(1.035);
+    color: #1a73e8;
+}
+.tile .name {
+    font-size: 1.22em;
+    margin: 16px 0 0 0;
+    font-family: 'Montserrat', 'facon', sans-serif;
+    font-weight: 500;
+    color: var(--main-color);
+    text-shadow: 0 2px 8px #2196F366;
 }
 
 .shade {
-opacity: 0.7;
-background-color: var(--nc-bg-3);
-position: fixed;
-width: 100%;
-height: 100vh;
-top: 0px;
-left: 0px;
-z-index: 100;
-display: block;
+    opacity: 0.7;
+    background-color: #1a73e8bb;
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    top: 0px;
+    left: 0px;
+    z-index: 100;
+    display: block;
 }
 
 .cont {
-opacity: 1;
-color: var(--nc-tx-1);
-background-color: var(--nc-bg-3);
-z-index: 1000;
-width: calc(100vw - 70px);
-height: calc(100vh - 70px);
-border-radius: 10px;
-text-align: center;
-position: fixed;
-left: 50%;
-top: 50%;
-transform: translateX(-50%) translateY(-50%);
+    opacity: 1;
+    color: #111;
+    background-color: #fff;
+    z-index: 1000;
+    width: calc(100vw - 70px);
+    height: calc(100vh - 70px);
+    border-radius: 18px;
+    text-align: center;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    box-shadow: 0 8px 32px rgba(33,150,243,0.18);
+    transform: translateX(-50%) translateY(-50%);
+    border: 2px solid #2196F3;
 }
 
 .loader{
-position: fixed;
-border:16px solid var(--nc-bg-3);
-border-radius:50%;
-border-top:16px solid var(--nc-lk-2);
-width:120px;
-height:120px;
-top: 0;
-right: 0;
-margin: 10px;
-animation:spin 2s linear infinite;
-transform: translateX(-50%) translateY(-50%);
+    position: fixed;
+    border: 16px solid #e5e7eb;
+    border-radius: 50%;
+    border-top: 16px solid var(--main-color);
+    width: 120px;
+    height: 120px;
+    top: 0; right: 0; margin: 10px;
+    animation: spin 2s linear infinite;
+    transform: translateX(-50%) translateY(-50%);
+}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+
+#contain { clear: both; margin-top: 32px; }
+#searcher { position: relative; z-index: 101; }
+
+select, input[type=search] {
+    font-family: 'Montserrat', sans-serif;
+    padding: 9px 14px;
+    border-radius: 8px;
+    border: 1px solid #c5c5c5;
+    margin-top: 8px;
+    background: #f6f8fa;
+    font-size: 1em;
 }
 
-@keyframes spin{
-0%{transform:rotate(0deg)}
-100%{transform:rotate(360deg)}
+/* Responsive tiles for small screens */
+@media (max-width: 900px) {
+    .tile { width: 92vw; min-height: 220px; margin: 14px 0; }
+    .tile img { width: 110px; height: 110px;}
+    body { padding: 8px; }
+    .title { font-size: 2.4em; }
+    .section-title { font-size: 1.3em; }
+}
+
+footer {
+    margin-top: 80px;
+    text-align: center;
+    font-size: 1em;
+    color: #e3e3e3;
+    opacity: 0.8;
+}
+.footer-links a {
+    color: #fff;
+    font-weight: 500;
+    text-decoration: underline;
+    margin: 0 6px;
+    opacity: 0.92;
+}
+.footer-links a:hover {
+    color: var(--main-color);
+    text-decoration: underline wavy;
 }
 </style>
 <script src='i.js'></script>
@@ -160,50 +245,51 @@ transform: translateX(-50%) translateY(-50%);
 
 <body onload="setSavedTheme()">
 <header>
-<h1 class="title">Gams</h1>
+    <h1 class="title">ClassLink</h1>
+    <p class="subtitle">Your Free Online Game Portal</p>
 </header>
 
-<label>Dark Mode:</label>
-<label class="switch">
-<input id="darkModeInput" type="checkbox" checked oninput="changeTheme(this)">
-<span class="slider round"></span>
-</label>
+<div style="margin-bottom: 16px;">
+    <label style="font-weight:500;">Dark Mode:</label>
+    <label class="switch">
+        <input id="darkModeInput" type="checkbox" checked oninput="changeTheme(this)">
+        <span class="slider round"></span>
+    </label>
+</div>
 
-<br><br>
+<p style="font-size: 1.1em; font-weight:500; margin-top:0;">Total Games: <span id="totalGames">Loading...</span></p>
 
-<p>Total Games: <span id="totalGames">Loading...</span></p>
-
-<label>Open Gam Mode:</label>
-<select onchange='changeGamMode(this)' id='gamMode'>
-<option value="gam">In new tab</option>
-<option value="embed">On this tab</option>
-<option value="blank">In an about:blank tab</option>
-<option value="direct">Replace this tab</option>
-<option value="raw">Raw link in new tab</option>
-</select>
+<div style="margin-bottom:16px;">
+    <label style="font-weight:500;">How to open games:</label>
+    <select onchange='changeGamMode(this)' id='gamMode'>
+        <option value="gam">New tab</option>
+        <option value="embed">Popup overlay</option>
+        <option value="blank">About:blank tab</option>
+        <option value="direct">Replace tab</option>
+        <option value="raw">Raw link</option>
+    </select>
+</div>
 
 <div class="overlay" id="overlay" style="display:none">
-<div class="shade" id="shade"></div>
-<div class="cont" id="cont">
-<a style="position:fixed;top:-35px;left:-35px;" id="newWin" title="Open in new window" target="_blank">
-<button>🡽</button>
-</a>
-<iframe style="width:100%;height:100%;border-radius:10px" frameborder=0 id="mainGam"></iframe>
-
-<div class='loader' id='loader'></div>
+    <div class="shade" id="shade"></div>
+    <div class="cont" id="cont">
+        <a style="position:fixed;top:-35px;left:-35px;" id="newWin" title="Open in new window" target="_blank">
+            <button>🡽</button>
+        </a>
+        <iframe style="width:100%;height:100%;border-radius:18px" frameborder=0 id="mainGam"></iframe>
+        <div class='loader' id='loader'></div>
+    </div>
 </div>
-</div>
-
 
 <div id="contain">
-
-<a href="Settings.html" class="tile"><img class="img" src="img/gams-g.png"><p class="name">Settings</p></a>
-<a href="g/about.html" class="tile"><img class="img" src="img/gams-g.png"><p class="name">About</p></a>
-
+    <a href="Settings.html" class="tile"><img class="img" src="img/gams-g.png"><p class="name">Settings</p></a>
+    <a href="g/about.html" class="tile"><img class="img" src="img/gams-g.png"><p class="name">About</p></a>
 </div>
 
 <div id="searcher">
-<div onclick="searchbar(this)" style="position:fixed; width: 50px; right: 10px; top: 10px; z-index: 100; font-size:13pt; transition: all 0.3s ease-in-out;"><svg style="max-width: 100%; fill: var(--nc-tx-2);" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg></div>
+    <div onclick="searchbar(this)" style="position:fixed; width: 50px; right: 10px; top: 10px; z-index: 100; font-size:15pt; transition: all 0.3s ease-in-out;">
+        <svg style="max-width: 100%; fill: var(--main-color);" viewBox="0 0 24 24" width="28" height="28"><path d="M21 20l-5.197-5.197A7.933 7.933 0 0016 9a8 8 0 10-8 8c1.848 0 3.544-.632 4.803-1.697L20 21z"></path></svg>
+    </div>
 </div>
 
 <script>
@@ -216,168 +302,136 @@ try {
 
 const BroadcastDisguise = new BroadcastChannel('BroadcastDisguise');
 
-function l(e) {
-return document.getElementById(e);
-}
+function l(e) { return document.getElementById(e); }
 
 function setLight() {
-document.documentElement.style.setProperty('--nc-tx-1', "#000000");
-document.documentElement.style.setProperty('--nc-tx-2', "#1A1A1A");
-document.documentElement.style.setProperty('--nc-bg-1', "#FFFFFF");
-document.documentElement.style.setProperty('--nc-bg-2', "#F6F8FA");
-document.documentElement.style.setProperty('--nc-bg-3', "#E5E7EB");
-document.documentElement.style.setProperty('--nc-lk-1', "#0070F3");
-document.documentElement.style.setProperty('--nc-lk-2', "#0366D6");
-document.documentElement.style.setProperty('--nc-lk-tx', "#FFFFFF");
-document.documentElement.style.setProperty('--nc-ac-1', "#79FFE1");
-document.documentElement.style.setProperty('--nc-ac-tx', "#0C4047");
+    document.documentElement.style.setProperty('--card-bg', "#fff");
+    document.documentElement.style.setProperty('--main-color', "#2196F3");
+    document.documentElement.style.setProperty('--accent-color', "#1a73e8");
+    document.documentElement.style.setProperty('--bg-gradient', "linear-gradient(135deg, #1a73e8 0%, #2196F3 100%)");
+    document.body.style.background = "var(--bg-gradient)";
 }
 
 function setDark() {
-document.documentElement.style.setProperty('--nc-tx-1', "#ffffff");
-document.documentElement.style.setProperty('--nc-tx-2', "#eeeeee");
-document.documentElement.style.setProperty('--nc-bg-1', "#000000");
-document.documentElement.style.setProperty('--nc-bg-2', "#111111");
-document.documentElement.style.setProperty('--nc-bg-3', "#222222");
-document.documentElement.style.setProperty('--nc-lk-1', "#3291FF");
-document.documentElement.style.setProperty('--nc-lk-2', "#0070F3");
-document.documentElement.style.setProperty('--nc-lk-tx', "#FFFFFF");
-document.documentElement.style.setProperty('--nc-ac-1', "#7928CA");
-document.documentElement.style.setProperty('--nc-ac-tx', "#FFFFFF");
+    document.documentElement.style.setProperty('--card-bg', "#181818");
+    document.documentElement.style.setProperty('--main-color', "#3291FF");
+    document.documentElement.style.setProperty('--accent-color', "#7928CA");
+    document.documentElement.style.setProperty('--bg-gradient', "linear-gradient(135deg, #232526 0%, #414345 100%)");
+    document.body.style.background = "var(--bg-gradient)";
 }
 
 function searchbar(elm) {
-elm.remove()
-l('searcher').innerHTML += `<input id="searchQuery" type="search" onload="startSearch()" onkeyup="startSearch()" placeholder="Search..." autocomplete="off" style="position:fixed; width: 20px; right: 10px; top: 10px; z-index: 100; font-size:13pt; transition: all 0.5s ease-in-out;" onblur="searchicon(this)" onfocus="this.style.width = '120px'">`;
-l('searchQuery').focus();
-l('searchQuery').style.width = '120px';
+    elm.remove()
+    l('searcher').innerHTML += `<input id="searchQuery" type="search" onload="startSearch()" onkeyup="startSearch()" placeholder="Search games..." autocomplete="off" style="position:fixed; width: 30px; right: 10px; top: 10px; z-index: 102;">`
+    l('searchQuery').focus();
+    l('searchQuery').style.width = '180px';
 }
 
 function searchicon(elm) {
-elm.style.width = '20px';
-setTimeout(function(){
-elm.remove();
-l('searcher').innerHTML += `<div onclick="searchbar(this)" style="position:fixed; width: 50px; right: 10px; top: 10px; z-index: 100; font-size:13pt; transition: all 0.3s ease-in-out;"><svg style="max-width: 100%; fill: var(--nc-tx-2);" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg></div>`;
-}, 500);
+    elm.style.width = '20px';
+    setTimeout(function(){
+        elm.remove();
+        l('searcher').innerHTML += `<div onclick="searchbar(this)" style="position:fixed; width: 50px; right: 10px; top: 10px; z-index: 100; font-size:13pt; transition: all 0.3s ease-in-out;">
+        <svg style="max-width: 100%; fill: var(--main-color);" viewBox="0 0 24 24" width="28" height="28"><path d="M21 20l-5.197-5.197A7.933 7.933 0 0016 9a8 8 0 10-8 8c1.848 0 3.544-.632 4.803-1.697L20 21z"></path></svg>
+        </div>`;
+    }, 500);
 }
 
 function getStoredJSON(key, data) {
-if (data && data.key && (localStorage[key] != 'null')) {
-var inStore = JSON.parse(localStorage[key]);
-if ((typeof inStore == 'object') && inStore.hasOwnProperty(data.key)) {
-return inStore[data.key];
-}
-}
-if (localStorage[key] && !data) {
-return JSON.parse(localStorage[key]);
-}
-return null;
+    if (data && data.key && (localStorage[key] != 'null')) {
+        var inStore = JSON.parse(localStorage[key]);
+        if ((typeof inStore == 'object') && inStore.hasOwnProperty(data.key)) {
+            return inStore[data.key];
+        }
+    }
+    if (localStorage[key] && !data) {
+        return JSON.parse(localStorage[key]);
+    }
+    return null;
 }
 
 function storeJSON(key, data) {
-if (localStorage[key]) {
-var inStore = JSON.parse(localStorage[key]) || {};
-inStore[data.key] = data.value;
-localStorage[key] = JSON.stringify(inStore);
-}else{
-var inStore = {};
-inStore[data.key] = data.value;
-localStorage[key] = JSON.stringify(inStore);
-}
-
-return localStorage[key];
+    if (localStorage[key]) {
+        var inStore = JSON.parse(localStorage[key]) || {};
+        inStore[data.key] = data.value;
+        localStorage[key] = JSON.stringify(inStore);
+    }else{
+        var inStore = {};
+        inStore[data.key] = data.value;
+        localStorage[key] = JSON.stringify(inStore);
+    }
+    return localStorage[key];
 }
 
 function changeTheme(input) {
-var wantsDarkMode = (input.checked);
-if (wantsDarkMode) {
-setDark();
-storeJSON('gams', {
-key: 'theme',
-value: 'dark'
-})
-} else {
-setLight();
-storeJSON('gams', {
-key: 'theme',
-value: 'light'
-})
-}
+    var wantsDarkMode = (input.checked);
+    if (wantsDarkMode) {
+        setDark();
+        storeJSON('gams', { key: 'theme', value: 'dark' });
+    } else {
+        setLight();
+        storeJSON('gams', { key: 'theme', value: 'light' });
+    }
 }
 
 function changeGamMode(input) {
-storeJSON('gams', {
-key: 'gamMode',
-value: input.value
-});
+    storeJSON('gams', { key: 'gamMode', value: input.value });
 }
 
 function setSavedTheme() {
-//Set Gam Mode
-if (getStoredJSON('gams', {key: 'gamMode'})) {document.getElementById('gamMode').value = getStoredJSON('gams', {key: 'gamMode'})}
-//Set gam Mode
-
-if (getStoredJSON('gams') && getStoredJSON('gams', {key: 'theme'})) {
-var theme = getStoredJSON('gams', {key: 'theme'});
-if (theme == 'light') {
-//eww you monster
-setLight();
-l('darkModeInput').checked = false;
-} else if (theme == 'dark') {
-setDark();
-l('darkModeInput').checked = true;
-}
-} else {
-
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-var newColorScheme = event.matches ? "dark" : "light";
-if (newColorScheme == 'dark') {
-l('darkModeInput').checked = true
-}
-if (newColorScheme == 'light') {
-l('darkModeInput').checked = false
-}
-});
-
-if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-l('darkModeInput').checked = true;
-} else {
-l('darkModeInput').checked = false;
-}
-}
+    if (getStoredJSON('gams', {key: 'gamMode'})) {
+        document.getElementById('gamMode').value = getStoredJSON('gams', {key: 'gamMode'})
+    }
+    if (getStoredJSON('gams') && getStoredJSON('gams', {key: 'theme'})) {
+        var theme = getStoredJSON('gams', {key: 'theme'});
+        if (theme == 'light') {
+            setLight();
+            l('darkModeInput').checked = false;
+        } else if (theme == 'dark') {
+            setDark();
+            l('darkModeInput').checked = true;
+        }
+    } else {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            var newColorScheme = event.matches ? "dark" : "light";
+            if (newColorScheme == 'dark') { l('darkModeInput').checked = true }
+            if (newColorScheme == 'light') { l('darkModeInput').checked = false }
+        });
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            l('darkModeInput').checked = true;
+        } else { l('darkModeInput').checked = false; }
+    }
 }
 
 l('shade').onclick = function() {
-l('overlay').style.display='none';
-l("mainGam").src = '';
-l("newWin").href = '';
+    l('overlay').style.display='none';
+    l("mainGam").src = '';
+    l("newWin").href = '';
 }
 
 function startSearch() {
-var input, filter, ul, li, a, i;
-input = l("searchQuery");
-filter = input.value.toUpperCase();
-ul = document.body;
-li = ul.getElementsByClassName("tile");
-for (i = 0; i < li.length; i++) {
-if (li[i].textContent.toUpperCase().indexOf(filter) > -1) {
-li[i].style.display = "";
-} else {
-li[i].style.display = "none";
-}
-}
+    var input = l("searchQuery");
+    var filter = input.value.toUpperCase();
+    var ul = document.body;
+    var li = ul.getElementsByClassName("tile");
+    for (var i = 0; i < li.length; i++) {
+        if (li[i].textContent.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
 }
 
 function createElement(tag, prps) {
-var elm = document.createElement(tag);
-if (prps) {
-var props = Object.getOwnPropertyNames(prps);
-for (i=0;i<props.length;i++) {
-elm.setAttribute(props[i], prps[props[i]]);
-}
-}
-
-return elm;
+    var elm = document.createElement(tag);
+    if (prps) {
+        var props = Object.getOwnPropertyNames(prps);
+        for (var i=0;i<props.length;i++) {
+            elm.setAttribute(props[i], prps[props[i]]);
+        }
+    }
+    return elm;
 }
 
 var totalGames = 0;
@@ -470,66 +524,44 @@ var gamsList = [
 {name: "Web Retro"},
 ];
 
-var container = createElement('div', {
-id: 'container'
-})
-
+var container = createElement('div', { id: 'container' });
 var currentSection = undefined;
-for (j = 0; j < gamsList.length; j++){
+for (var j = 0; j < gamsList.length; j++){
+    if (gamsList[j].title) { currentSection = gamsList[j].title }
+    if(gamsList[j].name){
+        totalGames += 1;
+        var tile = createElement('div', { class : 'tile' });
+        var imgName = (gamsList[j].name).toLowerCase().replace(/\s/g, '');
+        var imgSrc = (gamsList[j].img) || 'img/' + imgName + '.png';
+        var img = createElement('img', { class : 'img', src : imgSrc });
+        tile.appendChild(img);
 
-if (gamsList[j].title) {currentSection = gamsList[j].title}
+        var p = createElement('p', { class : 'name' });
+        p.innerHTML = gamsList[j].name;
+        tile.appendChild(p);
 
-if(gamsList[j].name){
-totalGames += 1;
-var tile = createElement('div', {
-class : 'tile'
-});
-var imgName = (gamsList[j].name).toLowerCase().replace(/\s/g, '');
-var imgSrc = (gamsList[j].img) || 'img/' + imgName + '.png';
-var img = createElement('img', {
-class : 'img',
-src : imgSrc
-});
-tile.appendChild(img);
+        if (currentSection) {
+            var section = createElement('span', { style: "display:none" });
+            section.innerHTML = currentSection;
+            tile.appendChild(section);
+        }
 
-var p = createElement('p', {
-class : 'name'
-});
-p.innerHTML = gamsList[j].name;
-tile.appendChild(p);
+        var modeX = createElement('span', { class: "modeX", style: "display:none" });
+        modeX.innerHTML = gamsList[j].type;
+        tile.appendChild(modeX);
 
-if (currentSection) {
-var section = createElement('span', {
-style: "display:none"
-});
-section.innerHTML = currentSection;
-tile.appendChild(section);
-}
-
-var modeX = createElement('span', {
-class: "modeX",
-style: "display:none"
-});
-modeX.innerHTML = gamsList[j].type;
-tile.appendChild(modeX);
-
-var aName = (gamsList[j].name).toLowerCase().replace(/\s/g, '');
-var aHref = (gamsList[j].href) || 'g/' + imgName + '.html';
-var a = createElement('a', {
-class : 'href',
-href : aHref
-});
-tile.appendChild(a);
-container.appendChild(tile);
-}else if (gamsList[j].title){
-var title = createElement('h2', {
-style: "float:left;width:100%"
-});
-container.appendChild(createElement('br'));
-title.innerHTML = gamsList[j].title;
-container.appendChild(title);
-container.appendChild(createElement('br'));
-}
+        var aName = (gamsList[j].name).toLowerCase().replace(/\s/g, '');
+        var aHref = (gamsList[j].href) || 'g/' + imgName + '.html';
+        var a = createElement('a', { class : 'href', href : aHref });
+        tile.appendChild(a);
+        container.appendChild(tile);
+    }else if (gamsList[j].title){
+        var title = createElement('h2', { class: "section-title", style: "float:left;width:100%" });
+        container.appendChild(createElement('br'));
+        title.innerHTML = gamsList[j].title;
+        container.appendChild(title);
+        container.appendChild(createElement('br'));
+    }
 }
 l('contain').appendChild(container);
 l('totalGames').innerText = totalGames;
@@ -537,151 +569,137 @@ l('totalGames').innerText = totalGames;
 var mode = 'gam'; //embed, gam, blank, direct
 //Init
 var gams = document.getElementsByClassName("tile");
-for (i = 0; i < gams.length; i++){
-gams[i].onclick = function(e){
-var href = (this.getElementsByClassName("href")[0].href);
-var name = (this.getElementsByClassName("name")[0].innerText);
-var modeX = (this.getElementsByClassName("modeX")[0].innerText);
-var pic = (this.getElementsByClassName("img")[0].src);
+for (var i = 0; i < gams.length; i++){
+    gams[i].onclick = function(e){
+        var href = (this.getElementsByClassName("href")[0].href);
+        var name = (this.getElementsByClassName("name")[0].innerText);
+        var modeX = (this.getElementsByClassName("modeX")[0].innerText);
+        var pic = (this.getElementsByClassName("img")[0].src);
 
-mode = getStoredJSON('gams', {key: 'gamMode'}) || 'gam';
+        mode = getStoredJSON('gams', {key: 'gamMode'}) || 'gam';
 
-if (modeX == "raw") {mode = modeX}
+        if (modeX == "raw") {mode = modeX}
+        if (mode == 'raw') {
+            window.open(href);
+        }
+        if (mode == 'direct') {
+            window.location = `g/g/Gam.html?icon=${pic}&name=${name}&src=${href}`;
+        }
+        if (mode == 'blank') {
+            var w = window.open();
+            var doc = w.document;
+            var body = doc.body;
+            body.style = "margin:0";
+            var iframe = w.document.createElement('iframe');
+            iframe.style = "width:100vw;height:100vh";
+            iframe.setAttribute('frameborder', 0);
+            iframe.src = `g/g/Gam.html?icon=${pic}&name=${name}&src=${href}`;
+            body.appendChild(iframe);
 
-if (mode == 'raw') {
-window.open(href);
-}
-
-if (mode == 'direct') {
-window.location = `g/g/Gam.html?icon=${pic}&name=${name}&src=${href}`;
-}
-
-if (mode == 'blank') {
-var w = window.open();
-var doc = w.document;
-
-var body = doc.body;
-body.style = "margin:0";
-var iframe = w.document.createElement('iframe');
-iframe.style = "width:100vw;height:100vh";
-iframe.setAttribute('frameborder', 0);
-iframe.src = `g/g/Gam.html?icon=${pic}&name=${name}&src=${href}`;
-body.appendChild(iframe);
-
-var script = w.document.createElement('script');
-script.innerHTML = `const BroadcastDisguise = new BroadcastChannel('BroadcastDisguise');
-
+            var script = w.document.createElement('script');
+            script.innerHTML = `const BroadcastDisguise = new BroadcastChannel('BroadcastDisguise');
 function setFavicon(href) {
-var existFav = document.querySelectorAll('link[rel*="icon"]');
-existFav.forEach(function(favicon) {
-favicon.parentNode.removeChild(favicon);
-});
-
-var link = document.createElement('link');
-link.type = 'image/x-icon';
-link.rel = 'icon';
-link.href = href;
-document.getElementsByTagName('head')[0].appendChild(link);
+    var existFav = document.querySelectorAll('link[rel*="icon"]');
+    existFav.forEach(function(favicon) {
+        favicon.parentNode.removeChild(favicon);
+    });
+    var link = document.createElement('link');
+    link.type = 'image/x-icon';
+    link.rel = 'icon';
+    link.href = href;
+    document.getElementsByTagName('head')[0].appendChild(link);
 }
-
 function getStoredJSON(key, data) {
-if (data && data.key && (localStorage[key] != 'null')) {
-var inStore = JSON.parse(localStorage[key]);
-if ((typeof inStore == 'object') && inStore.hasOwnProperty(data.key)) {
-return inStore[data.key];
+    if (data && data.key && (localStorage[key] != 'null')) {
+        var inStore = JSON.parse(localStorage[key]);
+        if ((typeof inStore == 'object') && inStore.hasOwnProperty(data.key)) {
+            return inStore[data.key];
+        }
+    }
+    if (localStorage[key] && !data) {
+        return JSON.parse(localStorage[key]);
+    }
+    return null;
 }
-}
-if (localStorage[key] && !data) {
-return JSON.parse(localStorage[key]);
-}
-return null;
-}
-
 function applyDisguise() {
-var icon = getStoredJSON('gams', {key: 'icon'});
-var title = getStoredJSON('gams', {key: 'title'});
-if (title) {
-document.title = (title);
-}else{
-document.title = 'about:blank';
+    var icon = getStoredJSON('gams', {key: 'icon'});
+    var title = getStoredJSON('gams', {key: 'title'});
+    if (title) {
+        document.title = (title);
+    }else{
+        document.title = 'about:blank';
+    }
+    if (icon) {
+        setFavicon(icon)
+    }else{
+        setFavicon('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABRklEQVR42mKgOqjq75ds7510YNL0uV9nAGqniqwKYiCIHIIjcAK22BGQLRdgBWvc3fnWk/FJhrkPO1xPgGvqPfLfJMHhT1yqurvS48bPaJhjD2efgidnVw[...]');
+    }
 }
-
-if (icon) {
-setFavicon(icon)
-}else{
-setFavicon('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABRklEQVR42mKgOqjq75ds7510YNL0uV9nAGqniqwKYiCIHIIjcAK22BGQLRdgBWvc3fnWk/FJhrkPO1xPgGvqPfLfJMHhT1yqurvS48bPaJhjD2efgidnVwa2yv59xecvEvi0UWCXq9t0ItfP2MMZ7nwIpkA8F1n8uLxZHM6yrBH7FIl2gFXDHYsErkn2hyKLHtcKrFntk58uVQJ+kSdQnmjhID4cwLLa8+K0BXsfNWCqBOsFdo2Yldv43DBrkxd30cjnNyYBhK0SQGkI9pG4Mu40D5b374DRCAyhHqXVfTmOwivivMkJxBz5wnHCtBfGgNFC+ChWKWRf3hsQIlyEoIv4IYEo5wkgtBLRekY9DE4Uin4Keae6hydGnljPmE8kRcCine6827AMsJ1IuW9ibnlQpXLBCR/WC875m2BP+VSu3c/0m+8V08OBngc0pxcAAAAASUVORK5CYII=')
-}
-}
-
 applyDisguise();
-
-BroadcastDisguise.onmessage = () => {
-applyDisguise();
-};
-`;
-doc.head.appendChild(script);
-}
-
-if (mode == 'gam') {
-window.open(`g/g/Gam.html?icon=${pic}&name=${name}&src=${href}`);
-}
-
-if (mode == 'embed') {
-l('overlay').style.display = 'block';
-l("mainGam").src = href;
-l("newWin").href = href;
-l("mainGam").focus();
-l("loader").style.display = 'block';
-l("mainGam").onload = function(){
-l("mainGam").focus();
-setTimeout(function(){
-l("loader").style.display = 'none';
-l("mainGam").focus();
-}, 100);
-}
-}
-
-}
+BroadcastDisguise.onmessage = () => { applyDisguise(); };`;
+            doc.head.appendChild(script);
+        }
+        if (mode == 'gam') {
+            window.open(`g/g/Gam.html?icon=${pic}&name=${name}&src=${href}`);
+        }
+        if (mode == 'embed') {
+            l('overlay').style.display = 'block';
+            l("mainGam").src = href;
+            l("newWin").href = href;
+            l("mainGam").focus();
+            l("loader").style.display = 'block';
+            l("mainGam").onload = function(){
+                l("mainGam").focus();
+                setTimeout(function(){
+                    l("loader").style.display = 'none';
+                    l("mainGam").focus();
+                }, 100);
+            }
+        }
+    }
 }
 //Init
 
 function setFavicon(href) {
-var existFav = document.querySelectorAll('link[rel*="icon"]');
-existFav.forEach(function(favicon) {
-favicon.parentNode.removeChild(favicon);
-});
-
-var link = document.createElement('link');
-link.type = 'image/x-icon';
-link.rel = 'icon';
-link.href = href;
-document.getElementsByTagName('head')[0].appendChild(link);
+    var existFav = document.querySelectorAll('link[rel*="icon"]');
+    existFav.forEach(function(favicon) {
+        favicon.parentNode.removeChild(favicon);
+    });
+    var link = document.createElement('link');
+    link.type = 'image/x-icon';
+    link.rel = 'icon';
+    link.href = href;
+    document.getElementsByTagName('head')[0].appendChild(link);
 }
 
 const ogTitle = document.title;
 const ogIcon = document.querySelectorAll('link[rel*="icon"]')[0].href;
 
 function applyDisguise() {
-var icon = getStoredJSON('gams', {key: 'icon'});
-var title = getStoredJSON('gams', {key: 'title'});
-if (title) {
-document.title = (title);
-}else{
-document.title = (ogTitle);
+    var icon = getStoredJSON('gams', {key: 'icon'});
+    var title = getStoredJSON('gams', {key: 'title'});
+    if (title) {
+        document.title = (title);
+    }else{
+        document.title = (ogTitle);
+    }
+    if (icon) {
+        setFavicon(icon)
+    }else{
+        setFavicon(ogIcon)
+    }
 }
-
-if (icon) {
-setFavicon(icon)
-}else{
-setFavicon(ogIcon)
-}
-}
-
 applyDisguise();
-
-BroadcastDisguise.onmessage = () => {
-applyDisguise();
-};
+BroadcastDisguise.onmessage = () => { applyDisguise(); };
 </script>
+
+<footer>
+  <div class="footer-links">
+    <a href="g/about.html">About</a> |
+    <a href="Settings.html">Settings</a> |
+    <a href="mailto:support@classlink.games">Contact</a>
+  </div>
+  <div style="margin-top:10px;">&copy; 2025 ClassLink Games. All rights reserved.</div>
+</footer>
 </body>
 </html>
