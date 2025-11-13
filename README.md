@@ -1,4 +1,13 @@
 ## Gams
+Added minecraft 1.8 and 1.12.2 (DOESN'T WORK OFFLINE!!!)(i think becuase it uses jsdeliver website and 1.8 only allows online play ._.)
+
+Working on adding my favorite games
+
+Also working on adding a proxy prolly titanium network or sum.
+
+I hope mountain sees this cuz that'd be cool.
+
+FORKED BY 31RGREEN!!! THIS STUFF MAY NOT WORK CUZ IDK HOW TO CODE 
 
 [![GitHub stars](https://img.shields.io/github/stars/Gams-Offline/Gams.svg)](https://github.com/Gams-Offline/Gams/stargazers)
 
@@ -35,6 +44,7 @@ Here are some of the most fun games available in this repository:
 2. Slope
 3. Tube Jumpers
 4. Super Mario 64
+5. Minecraft 1.12.2
 ...and more!
 
 ### For Coders :)
